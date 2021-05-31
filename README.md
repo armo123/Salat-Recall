@@ -1,2 +1,2 @@
 # Salat-Recall
-Simple descktop salat recall application
+Simple prayer reminder descktop application
