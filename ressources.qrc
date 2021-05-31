@@ -1,0 +1,18 @@
+<!DOCTYPE RCC><RCC version="1.0"> <qresource>
+<file alias="clock-bg.png">images/clock-bg.png</file>
+<file alias="control-stop-square.png">images/control-stop-square.png</file>
+<file alias="disk.png">images/disk.png</file>
+<file alias="door-open-out.png">images/door-open-out.png</file>
+<file alias="eye.png">images/eye.png</file>
+<file alias="eye-close.png">images/eye-close.png</file>
+<file alias="houres-handle.png">images/houres-handle.png</file>
+<file alias="icon.png">images/icon.png</file>
+<file alias="minutes-handle.png">images/minutes-handle.png</file>
+<file alias="salatHouresHandle.png">images/salatHouresHandle.png</file>
+<file alias="salatMinHandle.png">images/salatMinHandle.png</file>
+<file alias="seconds-handle.png">images/seconds-Handle.png</file>
+<file alias="wrench.png">images/wrench.png</file>
+<file alias="information.png">images/information.png</file>
+<file alias="aboutIcon.png">images/aboutIcon.png</file>
+</qresource>
+</RCC>
