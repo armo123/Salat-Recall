@@ -12,7 +12,7 @@ from PyQt5 import QtCore
 class AboutDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super(AboutDialog,self).__init__(*args, **kwargs)
-        labelName = QLabel("Salat Call version 1.0.0")
+        labelName = QLabel("Salat Call version 1.0")
         labelName.setStyleSheet("text-align: center; font: 15px ")
         appIcon = QPixmap()
         appIcon.load(":aboutIcon")
@@ -20,8 +20,10 @@ class AboutDialog(QDialog):
         labelIcon.setPixmap(appIcon)
         labelsLayout = QHBoxLayout()
         nameLayout = QHBoxLayout()
-        labelInfo = QLabel("""    Author: armo
+        labelInfo = QLabel("""    
+    Author: armo
     Email: armo23@protonmail.com
+    Git: https://github.com/armo123/Salat-Recall
     License: This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
