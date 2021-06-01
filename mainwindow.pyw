@@ -18,6 +18,7 @@ from getprayertimes import GetPrayerTimes
 from datetime import datetime
 from aboutwindow import AboutDialog
 import ressources 
+from PyQt5 import QtCore
 
 
 
@@ -176,8 +177,9 @@ class MainWindow(QMainWindow):
         # tray.setVisible(True)
 
         # Tray Menu
+
+        about = AboutDialog(self)
         settingsWindow = SettingsWindow(self)
-        about = AboutDialog()
 
         def hide():
             self.hide()
@@ -219,10 +221,13 @@ class MainWindow(QMainWindow):
                 sys.exit()
 
         def showSettings():
-            settingsWindow.show()
+            settingsWindow.exec()
+            
 
         def showAbout():
-            about.show()
+            about.exec()
+
+
 
         quitAction = QAction(QIcon(":door-open-out.png"), "&Quit", self)
         quitAction.setShortcut("Ctrl+Q")

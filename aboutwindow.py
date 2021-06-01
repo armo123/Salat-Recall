@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QDialog, QHBoxLayout, QLabel, QVBoxLayout,QApplicati
 from PyQt5.QtGui import QPixmap, QIcon
 import sys
 import ressources
+from PyQt5 import QtCore
 
 
 class AboutDialog(QDialog):
@@ -44,3 +45,4 @@ class AboutDialog(QDialog):
         self.setLayout(mainLayout)
         self.setWindowIcon(QIcon(":information"))
         self.setFixedSize(420,300)
+        #self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
