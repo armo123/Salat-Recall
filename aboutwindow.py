@@ -20,10 +20,10 @@ class AboutDialog(QDialog):
         labelIcon.setPixmap(appIcon)
         labelsLayout = QHBoxLayout()
         nameLayout = QHBoxLayout()
-        labelInfo = QLabel("""    
+        labelInfo = QLabel("""
     Author: armo
     Email: armo23@protonmail.com
-    Git: https://github.com/armo123/Salat-Recall
+    Git: https://github.com/armo123/Salat-Recall        
     License: This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or

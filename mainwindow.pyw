@@ -222,7 +222,6 @@ class MainWindow(QMainWindow):
 
         def showSettings():
             settingsWindow.exec()
-            
 
         def showAbout():
             about.exec()
