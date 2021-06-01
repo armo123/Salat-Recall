@@ -5,7 +5,7 @@
 
 import sys
 from PyQt5.QtGui import QIcon, QRegExpValidator
-from PyQt5.QtWidgets import QAction, QApplication, QGroupBox, QHBoxLayout, QMessageBox, QPushButton,\
+from PyQt5.QtWidgets import QAction, QApplication, QDialog, QGroupBox, QHBoxLayout, QMessageBox, QPushButton,\
      QVBoxLayout, QLabel, QLineEdit, QWidget, QComboBox
 from PyQt5.QtCore import QLine, QRegExp 
 from PyQt5.QtGui import QRegExpValidator, QIcon
@@ -14,8 +14,8 @@ from configparser import ConfigParser
     
 changed = False
 
-class SettingsWindow(QWidget):
-    def __init__(self, parent, *args, **kwargs):
+class SettingsWindow(QDialog):
+    def __init__(self, *args, **kwargs):
         super(SettingsWindow, self).__init__(*args, **kwargs)
         # Reding config file to file the text filds
         config = ConfigParser()
@@ -301,3 +301,5 @@ class SettingsWindow(QWidget):
             if (message == QMessageBox.No):
                 event.ignore()
         changed = False
+
+
