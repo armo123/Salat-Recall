@@ -6,10 +6,11 @@
 import sys
 from PyQt5.QtGui import QIcon, QRegExpValidator
 from PyQt5.QtWidgets import QAction, QApplication, QDialog, QGroupBox, QHBoxLayout, QMessageBox, QPushButton,\
-     QVBoxLayout, QLabel, QLineEdit, QWidget, QComboBox
-from PyQt5.QtCore import QLine, QRegExp 
+     QVBoxLayout, QLabel, QLineEdit, QWidget, QComboBox, QCheckBox, QSlider
+from PyQt5.QtCore import QLine, QRegExp , Qt
 from PyQt5.QtGui import QRegExpValidator, QIcon
 from configparser import ConfigParser
+
 
     
 changed = False
@@ -156,6 +157,45 @@ class SettingsWindow(QDialog):
         tunningLayout.addLayout(layoutAsr)
         tunningLayout.addLayout(maghribLayout)
         tunningLayout.addLayout(layoutIsha)
+        
+        adhanLabel = QLabel("No Adhan")
+        adhan = QCheckBox()
+        try:
+            checked = config["Settings"]["Adhan"]
+        except:
+            checked = "False"
+
+        if(checked == "False"):
+            adhan.setChecked(True)
+        else:
+            adhan.setChecked(False)
+
+        layoutAdhan = QHBoxLayout()
+        layoutAdhan.addWidget(adhanLabel)
+        layoutAdhan.addStretch
+        layoutAdhan.addWidget(adhan)
+        layoutGroupAdhan = QVBoxLayout()
+        layoutGroupAdhan.addLayout(layoutAdhan)
+
+        volumeAdhan = QSlider(Qt.Horizontal)
+        try:
+            vol = config["Settings"]["Vol"]
+        except KeyError:
+            vol = "50"
+        volumeAdhan.setValue(int(vol))
+        volumeLayout = QHBoxLayout()
+        volumeLayout.addWidget(volumeAdhan)
+        layoutGroupAdhan.addLayout(volumeLayout)
+        labelVol = QLabel()
+        labelVol.setText("Volume:" + str(volumeAdhan.value()))
+        layoutLabelVol = QHBoxLayout()
+        layoutLabelVol.addWidget(labelVol)
+        layoutGroupAdhan.addLayout(layoutLabelVol)
+
+
+        groupeAdhan = QGroupBox("Adhan:")
+        groupeAdhan.setLayout(layoutGroupAdhan)
+    
 
 
         
@@ -192,12 +232,13 @@ class SettingsWindow(QDialog):
         settingsLayout.addWidget(locationGroup)
         settingsLayout.addWidget(tuneGroup)
         settingsLayout.addWidget(methodsGroup)
+        settingsLayout.addWidget(groupeAdhan)
         settingsLayout.addStretch()
         settingsLayout.addLayout(layoutSave)
         self.setLayout(settingsLayout)
         self.setWindowIcon(QIcon(":wrench.png"))
         self.setWindowTitle("Settings")
-        self.setFixedSize(220, 380)
+        self.setFixedSize(220, 480)
         self.setStyleSheet("QGroupBox{font: bold;}")
 
         # Saving settings in ini file
@@ -206,6 +247,12 @@ class SettingsWindow(QDialog):
         def changed():
             global changed
             changed = True
+
+        def volumeChanged():
+            labelVol.setText("Volume:" + str(volumeAdhan.value()))
+
+        
+
 
         latitude.textChanged[str].connect(changed)
         longitude.textChanged[str].connect(changed)
@@ -216,6 +263,7 @@ class SettingsWindow(QDialog):
         maghrib.textChanged[str].connect(changed)
         isha.textChanged[str].connect(changed)
         methodList.currentTextChanged[str].connect(changed)
+        volumeAdhan.valueChanged.connect(volumeChanged)
 
         def saveConfig():
             if(len(latitude.text()) > 0):
@@ -270,6 +318,13 @@ class SettingsWindow(QDialog):
 
             method = methodList.currentText()
 
+            if(adhan.isChecked() == True):
+                noAdhan = "False"
+            else:
+                noAdhan = "True"
+
+            adhanVol = str(volumeAdhan.value())  
+
 
             config["Settings"]={'Latitude':  latitudeValue,
                                 'Longitude': longitudeValue,
@@ -279,11 +334,14 @@ class SettingsWindow(QDialog):
                                 'Asr':       asrValue,
                                 'Maghrib':   maghribValue,
                                 'Isha':      ishaValue,
-                                'Method':    method}                 
+                                'Method':    method,
+                                'Adhan':     noAdhan,
+                                'Vol':       adhanVol}                 
                             
             with open('config.ini', 'w') as configfile:
                 config.write(configfile)
             global changed
+            global state
             if(changed == True):
                 QMessageBox.information(self, "Restart the App", 
                 "Please restart the Application")
@@ -300,6 +358,9 @@ class SettingsWindow(QDialog):
             QMessageBox.Yes| QMessageBox.No, QMessageBox.No)
             if (message == QMessageBox.No):
                 event.ignore()
+            else:
+                changed = False
+                return
         changed = False
 
 

@@ -8,7 +8,7 @@ from clockwidget import ClockWidget
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout,\
         QHBoxLayout, QGridLayout, QWidget, QGroupBox, QSystemTrayIcon, QMenu,\
         QAction, qApp, QCalendarWidget, QAction, QGridLayout, QGridLayout,\
-        QMessageBox
+        QMessageBox 
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, QTimer, QUrl, QTimer, QThreadPool
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QSound
@@ -19,6 +19,7 @@ from datetime import datetime
 from aboutwindow import AboutDialog
 import ressources 
 from PyQt5 import QtCore
+from configparser import ConfigParser
 
 
 
@@ -159,15 +160,26 @@ class MainWindow(QMainWindow):
         mainWidget = QWidget()
         mainWidget.setLayout(mainLayout)
         self.setCentralWidget(mainWidget)
-
+    
 
         player = QMediaPlayer(self)
         def playAdhan():
-            url = QUrl.fromLocalFile("adhan.wav")
-            adhan = QMediaContent(url)
-            player.setMedia(adhan)
-            player.setVolume(50)
-            player.play()
+            config = ConfigParser()
+            config.read('config.ini')
+            try:
+                if(config["Settings"]["Adhan"] == "True"):
+                    url = QUrl.fromLocalFile("adhan.wav")
+                    adhan = QMediaContent(url)
+                    player.setMedia(adhan)
+                    try:
+                      player.setVolume(int(config["Settings"]["Vol"]))
+                    except KeyError:
+                        pass
+                    player.play()
+                else:
+                    pass
+            except KeyError:
+                pass
 
         # Tray icon 
         icon = QIcon(":icon.png")
@@ -222,6 +234,7 @@ class MainWindow(QMainWindow):
 
         def showSettings():
             settingsWindow.exec()
+        
 
         def showAbout():
             about.exec()
@@ -315,34 +328,35 @@ class MainWindow(QMainWindow):
             ishaAdhan    =   str(times["isha"])    + ":00"
 
             if(str(now()) == imsakAdhan):
+                tray.showMessage("Salat Recall" , "Its time for Imsak !", icon, 5000)
                 playAdhan()
                 currentPrayerFun()
-                tray.showMessage("Salat Recall" , "Its time for Imsak !", icon, 5000)
                 
 
             if(str(now()) == fajrAdhan):
+                tray.showMessage("Salat Recall" , "Its time for Fajr prayer !", icon, 5000)
                 playAdhan()
                 currentPrayerFun()
-                tray.showMessage("Salat Recall" , "Its time for Fajr prayer !", icon, 5000)
 
             if(str(now()) == dhuhrAdhan):
+                tray.showMessage("Salat Recall" , "Its time for Dhuhr prayer !", icon, 5000)
                 playAdhan()
                 currentPrayerFun()
-                tray.showMessage("Salat Recall" , "Its time for Dhuhr prayer !", icon, 5000)
 
             if(str(now()) == asrAdhan):
-                playAdhan()
                 tray.showMessage("Salat Recall" , "Its time for Asr prayer !", icon, 5000)
+                playAdhan()
+                currentPrayerFun()
 
             if(str(now()) == maghribAdhan):
+                tray.showMessage("Salat Recall" , "Its time for Maghrib prayer !", icon, 5000)
                 playAdhan()
                 currentPrayerFun()
-                tray.showMessage("Salat Recall" , "Its time for Maghrib prayer !", icon, 5000)
 
             if(str(now()) == ishaAdhan):
+                tray.showMessage("Salat Recall" , "Its time for Isha prayer !", icon, 5000)
                 playAdhan()
                 currentPrayerFun()
-                tray.showMessage("Salat Recall" , "Its time for Isha prayer !", icon, 5000)
 
             # Displaying Current Prayer
             if(str(now()) >= imsakAdhan):
