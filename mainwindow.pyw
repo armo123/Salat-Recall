@@ -160,12 +160,15 @@ class MainWindow(QMainWindow):
         mainWidget = QWidget()
         mainWidget.setLayout(mainLayout)
         self.setCentralWidget(mainWidget)
+
+        # Reading the config File 
+
+        config = ConfigParser()
+        config.read('config.ini')
     
 
         player = QMediaPlayer(self)
         def playAdhan():
-            config = ConfigParser()
-            config.read('config.ini')
             try:
                 if(config["Settings"]["Adhan"] == "True"):
                     url = QUrl.fromLocalFile("adhan.wav")
@@ -288,27 +291,8 @@ class MainWindow(QMainWindow):
 
 
 
-        def currentPrayerFun():
-            imsakAdhan   =   str(times["imsak"])   + ":00"
-            fajrAdhan    =   str(times["fajr"])    + ":00"
-            dhuhrAdhan   =   str(times["dhuhr"])   + ":00"
-            asrAdhan     =   str(times["asr"])     + ":00"
-            maghribAdhan =   str(times["maghrib"]) + ":00"
-            ishaAdhan    =   str(times["isha"])    + ":00"
-
-            currentTime = int(splitedTime()[0] + splitedTime()[1] +\
-                    splitedTime()[2])
-
-            spImsak = imsakAdhan.split(":")
-            # imsakTime = int(spImsak[0] + spImsak[1] + spImsak[2])
-            # spFajr = fajrAdhan.split(":")
-            # fajrTime = int(spFajr[0] + spFajr[1] + spFajr[2])
-            # print(fajrTime)
-
 
     
-        currentPrayerFun()
-
        
         threadpool = QThreadPool()
         def timeLoop():
@@ -328,35 +312,53 @@ class MainWindow(QMainWindow):
             ishaAdhan    =   str(times["isha"])    + ":00"
 
             if(str(now()) == imsakAdhan):
-                tray.showMessage("Salat Recall" , "Its time for Imsak !", icon, 5000)
+                try:
+                    if(str(config["Settings"]["Notification"]) == "True"):
+                        tray.showMessage("Salat Recall" , "Its time for Imsak !", icon, 5000)
+                except KeyError:
+                    pass
                 playAdhan()
-                currentPrayerFun()
-                
 
             if(str(now()) == fajrAdhan):
-                tray.showMessage("Salat Recall" , "Its time for Fajr prayer !", icon, 5000)
+                try:
+                    if(str(config["Settings"]["Notification"]) == "True"):
+                        tray.showMessage("Salat Recall" , "Its time for Fajr prayer !", icon, 5000)
+                except KeyError:
+                    pass
                 playAdhan()
-                currentPrayerFun()
 
             if(str(now()) == dhuhrAdhan):
-                tray.showMessage("Salat Recall" , "Its time for Dhuhr prayer !", icon, 5000)
+                try:
+                    if(str(config["Settings"]["Notification"]) == "True"):
+                        tray.showMessage("Salat Recall" , "Its time for Dhuhr prayer !", icon, 5000)
+                except KeyError:
+                    pass
                 playAdhan()
-                currentPrayerFun()
 
             if(str(now()) == asrAdhan):
-                tray.showMessage("Salat Recall" , "Its time for Asr prayer !", icon, 5000)
+                try:
+                    if(str(config["Settings"]["Notification"]) == "True"):
+                        tray.showMessage("Salat Recall" , "Its time for Asr prayer !", icon, 5000)
+                except KeyError:
+                    pass
+
                 playAdhan()
-                currentPrayerFun()
 
             if(str(now()) == maghribAdhan):
-                tray.showMessage("Salat Recall" , "Its time for Maghrib prayer !", icon, 5000)
+                try:
+                    if(str(config["Settings"]["Notification"]) == "True"):
+                        tray.showMessage("Salat Recall" , "Its time for Maghrib prayer !", icon, 5000)
+                except KeyError:
+                    pass
                 playAdhan()
-                currentPrayerFun()
 
             if(str(now()) == ishaAdhan):
-                tray.showMessage("Salat Recall" , "Its time for Isha prayer !", icon, 5000)
+                try:
+                    if(str(config["Settings"]["Notification"]) == "True"):
+                        tray.showMessage("Salat Recall" , "Its time for Isha prayer !", icon, 5000)
+                except KeyError:
+                    pass
                 playAdhan()
-                currentPrayerFun()
 
             # Displaying Current Prayer
             if(str(now()) >= imsakAdhan):

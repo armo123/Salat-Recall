@@ -158,7 +158,7 @@ class SettingsWindow(QDialog):
         tunningLayout.addLayout(maghribLayout)
         tunningLayout.addLayout(layoutIsha)
         
-        adhanLabel = QLabel("No Adhan")
+        adhanLabel = QLabel("No adhan")
         adhan = QCheckBox()
         try:
             checked = config["Settings"]["Adhan"]
@@ -169,13 +169,28 @@ class SettingsWindow(QDialog):
             adhan.setChecked(True)
         else:
             adhan.setChecked(False)
+        
+        notifLabel = QLabel("No notifications")
+        notification = QCheckBox()
+        try:
+            checkedNotif = config["Settings"]["Notification"]
+        except KeyError:
+            checkedNotif = "False"
+
+        if(checkedNotif == "False"):
+            notification.setChecked(True)
+        else:
+            notification.setChecked(False)
+
+        notifLayout = QHBoxLayout()
+        notifLayout.addWidget(notifLabel)
+        notifLayout.addWidget(notification)
 
         layoutAdhan = QHBoxLayout()
         layoutAdhan.addWidget(adhanLabel)
         layoutAdhan.addStretch
         layoutAdhan.addWidget(adhan)
         layoutGroupAdhan = QVBoxLayout()
-        layoutGroupAdhan.addLayout(layoutAdhan)
 
         volumeAdhan = QSlider(Qt.Horizontal)
         try:
@@ -185,11 +200,13 @@ class SettingsWindow(QDialog):
         volumeAdhan.setValue(int(vol))
         volumeLayout = QHBoxLayout()
         volumeLayout.addWidget(volumeAdhan)
-        layoutGroupAdhan.addLayout(volumeLayout)
         labelVol = QLabel()
         labelVol.setText("Volume:" + str(volumeAdhan.value()))
         layoutLabelVol = QHBoxLayout()
         layoutLabelVol.addWidget(labelVol)
+        layoutGroupAdhan.addLayout(layoutAdhan)
+        layoutGroupAdhan.addLayout(notifLayout)
+        layoutGroupAdhan.addLayout(volumeLayout)
         layoutGroupAdhan.addLayout(layoutLabelVol)
 
 
@@ -323,6 +340,11 @@ class SettingsWindow(QDialog):
             else:
                 noAdhan = "True"
 
+            if(notification.isChecked() == True):
+                noNotif = "False"
+            else:
+                noNotif = "True"
+
             adhanVol = str(volumeAdhan.value())  
 
 
@@ -336,7 +358,8 @@ class SettingsWindow(QDialog):
                                 'Isha':      ishaValue,
                                 'Method':    method,
                                 'Adhan':     noAdhan,
-                                'Vol':       adhanVol}                 
+                                'Vol':       adhanVol,
+                                'Notification': noNotif}                 
                             
             with open('config.ini', 'w') as configfile:
                 config.write(configfile)
