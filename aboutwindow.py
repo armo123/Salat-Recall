@@ -22,8 +22,13 @@ class AboutDialog(QDialog):
         nameLayout = QHBoxLayout()
         labelInfo = QLabel("""
     Author: armo
+
     Email: armo23@protonmail.com
+
     Git repo: https://github.com/armo123/Salat-Recall        
+
+    Home: https://salatrecall.weebly.com
+
     License: This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -46,5 +51,5 @@ class AboutDialog(QDialog):
 
         self.setLayout(mainLayout)
         self.setWindowIcon(QIcon(":information"))
-        self.setFixedSize(420,340)
+        self.setFixedSize(420,400)
         #self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
