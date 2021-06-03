@@ -313,7 +313,10 @@ class MainWindow(QMainWindow):
             ishaAdhan    =   str(times["isha"])    + ":00"
             config = ConfigParser()
             config.read("config.ini")
-            notifconfig = str(config["Settings"]["Notification"])
+            try:
+                notifconfig = str(config["Settings"]["Notification"])
+            except KeyError:
+                notifconfig = "True"
 
             if(str(now()) == imsakAdhan):
                 print(notifconfig)

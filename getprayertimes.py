@@ -37,9 +37,9 @@ class GetPrayerTimes():
 
         # Fine tuning necessary prayer times according to the region
         try:
-            self.imsakcopnfig = float(self.config["Settings"]["Imsak"])
+            self.imsakconfig = float(self.config["Settings"]["Imsak"])
         except KeyError:
-            self.imsakcopnfig = 0 
+            self.imsakconfig = 0 
         
         try:
             self.fajrconfig = float(self.config["Settings"]["Fajr"])
@@ -67,7 +67,7 @@ class GetPrayerTimes():
             self.ishaconfig = 0
         
         self.PT.tune({
-            "imsak"    : self.imsakcopnfig,
+            "imsak"    : self.imsakconfig,
             "fajr"     : self.fajrconfig,
             "dhuhr"    : self.dhuhrconfig,
             "asr"      : self.asrconfig,

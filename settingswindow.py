@@ -30,7 +30,7 @@ class SettingsWindow(QDialog):
         latitude = QLineEdit()
         latitude.setFixedWidth(50)
         latitude.setMaxLength(7)
-        rx = QRegExp("\-{0,1}[0-9]{2,3}\.[0-9]{2}")
+        rx = QRegExp("\-{0,1}[0-9]{0,2}\.[0-9]{2}")
         latitude.setValidator(QRegExpValidator(rx))
 
         try:
@@ -67,7 +67,7 @@ class SettingsWindow(QDialog):
         imsak = QLineEdit()
         imsak.setMaxLength(6)
         imsak.setMaximumWidth(50)
-        rxHours = QRegExp("\-{0,1}[0-2][0-9]{0,1}\.[0-9]{0,2}")
+        rxHours = QRegExp("\-{0,1}[0-9]{0,1}[0-9]{0,1}[0-9]{0,1}\.[0-9]{0,2}")
         imsak.setValidator(QRegExpValidator(rxHours))
 
         try:
@@ -267,6 +267,7 @@ class SettingsWindow(QDialog):
 
         def volumeChanged():
             labelVol.setText("Volume:" + str(volumeAdhan.value()))
+            self.state = True
 
         def stateCh():
             self.state = True
@@ -286,6 +287,7 @@ class SettingsWindow(QDialog):
         volumeAdhan.valueChanged.connect(volumeChanged)
         adhan.stateChanged.connect(stateCh)
         notification.stateChanged.connect(stateCh)
+
 
         def saveConfig():
             if(len(latitude.text()) > 0):
@@ -311,8 +313,6 @@ class SettingsWindow(QDialog):
             else:
                 fajr.setText("00.00")
                 fajrValue = "00.00"
-
-            fajrValue  = "00.00"
 
             if(len(dhuhr.text()) > 0):
                 dhuhrValue = dhuhr.text()
