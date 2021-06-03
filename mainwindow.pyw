@@ -163,14 +163,15 @@ class MainWindow(QMainWindow):
 
         # Reading the config File 
 
-        config = ConfigParser()
-        config.read('config.ini')
     
 
         player = QMediaPlayer(self)
         def playAdhan():
+            config = ConfigParser()
+            config.read('config.ini')
+            adhanconfig = str(config["Settings"]["Adhan"])
             try:
-                if(config["Settings"]["Adhan"] == "True"):
+                if(adhanconfig == "True"):
                     url = QUrl.fromLocalFile("adhan.wav")
                     adhan = QMediaContent(url)
                     player.setMedia(adhan)
@@ -310,10 +311,14 @@ class MainWindow(QMainWindow):
             asrAdhan     =   str(times["asr"])     + ":00"
             maghribAdhan =   str(times["maghrib"]) + ":00"
             ishaAdhan    =   str(times["isha"])    + ":00"
+            config = ConfigParser()
+            config.read("config.ini")
+            notifconfig = str(config["Settings"]["Notification"])
 
             if(str(now()) == imsakAdhan):
+                print(notifconfig)
                 try:
-                    if(str(config["Settings"]["Notification"]) == "True"):
+                    if(notifconfig == "True"):
                         tray.showMessage("Salat Recall" , "Its time for Imsak !", icon, 5000)
                 except KeyError:
                     pass
@@ -321,7 +326,7 @@ class MainWindow(QMainWindow):
 
             if(str(now()) == fajrAdhan):
                 try:
-                    if(str(config["Settings"]["Notification"]) == "True"):
+                    if(notifconfig == "True"):
                         tray.showMessage("Salat Recall" , "Its time for Fajr prayer !", icon, 5000)
                 except KeyError:
                     pass
@@ -329,7 +334,7 @@ class MainWindow(QMainWindow):
 
             if(str(now()) == dhuhrAdhan):
                 try:
-                    if(str(config["Settings"]["Notification"]) == "True"):
+                    if(notifconfig == "True"):
                         tray.showMessage("Salat Recall" , "Its time for Dhuhr prayer !", icon, 5000)
                 except KeyError:
                     pass
@@ -337,7 +342,7 @@ class MainWindow(QMainWindow):
 
             if(str(now()) == asrAdhan):
                 try:
-                    if(str(config["Settings"]["Notification"]) == "True"):
+                    if(notifconfig == "True"):
                         tray.showMessage("Salat Recall" , "Its time for Asr prayer !", icon, 5000)
                 except KeyError:
                     pass
@@ -346,7 +351,7 @@ class MainWindow(QMainWindow):
 
             if(str(now()) == maghribAdhan):
                 try:
-                    if(str(config["Settings"]["Notification"]) == "True"):
+                    if(notifconfig == "True"):
                         tray.showMessage("Salat Recall" , "Its time for Maghrib prayer !", icon, 5000)
                 except KeyError:
                     pass
@@ -354,7 +359,7 @@ class MainWindow(QMainWindow):
 
             if(str(now()) == ishaAdhan):
                 try:
-                    if(str(config["Settings"]["Notification"]) == "True"):
+                    if(notifconfig == "True"):
                         tray.showMessage("Salat Recall" , "Its time for Isha prayer !", icon, 5000)
                 except KeyError:
                     pass

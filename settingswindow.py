@@ -13,15 +13,16 @@ from configparser import ConfigParser
 
 
     
-changed = False
 
 class SettingsWindow(QDialog):
+    state = False
+    changed = False
     def __init__(self, *args, **kwargs):
         super(SettingsWindow, self).__init__(*args, **kwargs)
         # Reding config file to file the text filds
         config = ConfigParser()
         config.read("config.ini")
-
+    
 
         # Creating widgets 
 
@@ -262,11 +263,13 @@ class SettingsWindow(QDialog):
 
 
         def changed():
-            global changed
-            changed = True
+            self.changed = True
 
         def volumeChanged():
             labelVol.setText("Volume:" + str(volumeAdhan.value()))
+
+        def stateCh():
+            self.state = True
 
         
 
@@ -281,6 +284,8 @@ class SettingsWindow(QDialog):
         isha.textChanged[str].connect(changed)
         methodList.currentTextChanged[str].connect(changed)
         volumeAdhan.valueChanged.connect(volumeChanged)
+        adhan.stateChanged.connect(stateCh)
+        notification.stateChanged.connect(stateCh)
 
         def saveConfig():
             if(len(latitude.text()) > 0):
@@ -363,27 +368,25 @@ class SettingsWindow(QDialog):
                             
             with open('config.ini', 'w') as configfile:
                 config.write(configfile)
-            global changed
-            global state
-            if(changed == True):
+            if(self.changed == True):
                 QMessageBox.information(self, "Restart the App", 
                 "Please restart the Application")
-            changed = False
+            self.changed = False
+            self.state = False
         
 
         saveButton.clicked.connect(saveConfig)
         
     def closeEvent(self, event):
-        global changed
-        if (changed == True):
+        if (self.changed == True or self.state == True):
             message =  QMessageBox.question(self, "Quit without saving", 
             "Do you want to quit without saving ?", 
             QMessageBox.Yes| QMessageBox.No, QMessageBox.No)
             if (message == QMessageBox.No):
                 event.ignore()
             else:
-                changed = False
+                self.changed = False
                 return
-        changed = False
+        self.changed = False
 
 
