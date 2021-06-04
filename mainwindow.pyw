@@ -360,7 +360,6 @@ class MainWindow(QMainWindow):
                 pass
             #self.playAdhan()
 
-        print("Now:" + self.now())
         # Displaying Current Prayer
         if(str(self.now()) >= imsakAdhan):
             self.labelCurrentPrayerTime.setText("Imsak")
