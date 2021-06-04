@@ -30,11 +30,11 @@ class MainWindow(QMainWindow):
 
 
         PT = GetPrayerTimes()
-        times = PT.times
+        self.times = PT.times
 
         # Imsak labels
         labelImsak = QLabel("Imsak:")
-        labelImsakTime = QLabel(times['imsak'])
+        labelImsakTime = QLabel(self.times['imsak'])
 
         # Horizontal layout holding imsak labels
         layoutLabelImsak = QHBoxLayout()
@@ -42,18 +42,18 @@ class MainWindow(QMainWindow):
         # layoutLabelImsak.addStretch(1);
         layoutLabelImsak.addWidget(labelImsakTime)
 
-        # Fajr labels
+        # Fajr label
         labelFajr = QLabel("Fajr:")
-        labelFajrTime = QLabel(times['fajr'])
+        labelFajrTime = QLabel(self.times['fajr'])
 
         # Horizontal layout holding fajr labels
         layoutLabelFajr = QHBoxLayout()
         layoutLabelFajr.addWidget(labelFajr)
         layoutLabelFajr.addWidget(labelFajrTime)
 
-        # Sunrise labels
+        # Sunrise label
         labelSunrise = QLabel("Sunrise:")
-        labelSunriseTime = QLabel(times["sunrise"])
+        labelSunriseTime = QLabel(self.times["sunrise"])
 
         # Horizontal layout holding sunrise labels
         layoutLabelSunrise = QHBoxLayout()
@@ -62,7 +62,7 @@ class MainWindow(QMainWindow):
 
         # Dhuhr labels
         labelDhuhr = QLabel("Dhuhr:")
-        labelDhuhrTime = QLabel(times["dhuhr"])
+        labelDhuhrTime = QLabel(self.times["dhuhr"])
 
         # Horizontal layout holding dhuhr labels
         layoutLabelDhuhr = QHBoxLayout()
@@ -71,7 +71,7 @@ class MainWindow(QMainWindow):
 
         # Asr labels
         labelAsr = QLabel("Asr:")
-        labelAsrTime = QLabel(times["asr"])
+        labelAsrTime = QLabel(self.times["asr"])
 
         # Horizontal layout holding asr labels
         layoutLabelAsr = QHBoxLayout()
@@ -80,7 +80,7 @@ class MainWindow(QMainWindow):
 
         # maghrib labels
         labelMaghrib = QLabel("Maghrib:")
-        labelMaghribTime = QLabel(times["maghrib"])
+        labelMaghribTime = QLabel(self.times["maghrib"])
 
         # Horizontal layout holding maghrib labels
         layoutLabelMaghrib = QHBoxLayout()
@@ -89,7 +89,7 @@ class MainWindow(QMainWindow):
 
         # Isha labels
         labelIsha = QLabel("Isha:")
-        labelIshaTime = QLabel(times["isha"])
+        labelIshaTime = QLabel(self.times["isha"])
 
         # Horizontal layout holding maghrib labels
         layoutLabelIsha = QHBoxLayout()
@@ -97,30 +97,30 @@ class MainWindow(QMainWindow):
         layoutLabelIsha.addWidget(labelIshaTime)
 
         # Current Prayer Label
-        labelCurrentPrayer = QLabel("Current Prayer:")
-        labelCurrentPrayer.setStyleSheet("font-weight: bold")
-        labelCurrentPrayerTime = QLabel("")
-        labelCurrentPrayerTime.setStyleSheet("color: green; font-weight: bold")
+        self.labelCurrentPrayer = QLabel("Current Prayer:")
+        self.labelCurrentPrayer.setStyleSheet("font-weight: bold")
+        self.labelCurrentPrayerTime = QLabel("")
+        self.labelCurrentPrayerTime.setStyleSheet("color: green; font-weight: bold")
         layoutCurrentPrayer = QHBoxLayout()
 
 
         # Layout for CurrentPrayer labels
         layoutCurentPrayer = QHBoxLayout
-        layoutCurrentPrayer.addWidget(labelCurrentPrayer)
-        layoutCurrentPrayer.addWidget(labelCurrentPrayerTime)
+        layoutCurrentPrayer.addWidget(self.labelCurrentPrayer)
+        layoutCurrentPrayer.addWidget(self.labelCurrentPrayerTime)
         
         # Next Prayer Label
-        labelNextPrayer = QLabel("Next Prayer:")
-        labelNextPrayer.setStyleSheet("font: bold")
-        labelNextPrayerTime = QLabel("")
-        labelNextPrayerTime.setStyleSheet("color: #a100ff; font: bold")
+        self.labelNextPrayer = QLabel("Next Prayer:")
+        self.labelNextPrayer.setStyleSheet("font: bold")
+        self.labelNextPrayerTime = QLabel("")
+        self.labelNextPrayerTime.setStyleSheet("color: #a100ff; font: bold")
         layoutNextPrayer = QHBoxLayout()
 
         # Layout for Next Prayer labels
-        layoutNextPrayer.addWidget(labelNextPrayer)
-        layoutNextPrayer.addWidget(labelNextPrayerTime)
+        layoutNextPrayer.addWidget(self.labelNextPrayer)
+        layoutNextPrayer.addWidget(self.labelNextPrayerTime)
 
-        # Prayer times layout
+        # Prayer self.times layout
         prayerTimesLayout = QVBoxLayout()
         prayerTimesLayout.addLayout(layoutLabelImsak)
         prayerTimesLayout.addLayout(layoutLabelFajr)
@@ -161,53 +161,21 @@ class MainWindow(QMainWindow):
         mainWidget.setLayout(mainLayout)
         self.setCentralWidget(mainWidget)
 
-        # Reading the config File 
+        self.player = QMediaPlayer(self)
+        self.settingsWindow = SettingsWindow()
+        self.aboutWindow = AboutDialog()
 
-    
 
-        player = QMediaPlayer(self)
-        def playAdhan():
-            config = ConfigParser()
-            config.read('config.ini')
-            adhanconfig = str(config["Settings"]["Adhan"])
-            try:
-                if(adhanconfig == "True"):
-                    url = QUrl.fromLocalFile("adhan.wav")
-                    adhan = QMediaContent(url)
-                    player.setMedia(adhan)
-                    try:
-                      player.setVolume(int(config["Settings"]["Vol"]))
-                    except KeyError:
-                        pass
-                    player.play()
-                else:
-                    pass
-            except KeyError:
-                pass
+
 
         # Tray icon 
-        icon = QIcon(":icon.png")
-        self.setWindowIcon(icon)
-        tray = QSystemTrayIcon(self)
-        tray.setIcon(icon)
+        self.icon = QIcon(":icon.png")
+        self.setWindowIcon(self.icon)
+        self.tray = QSystemTrayIcon(self)
+        self.tray.setIcon(self.icon)        # Tray icon 
         # tray.setVisible(True)
 
         # Tray Menu
-
-        about = AboutDialog(self)
-        settingsWindow = SettingsWindow(self)
-
-        def hide():
-            self.hide()
-            settingsWindow.hide()
-            about.hide()
-
-        def show():
-            self.show()
-
-        def stopAdhan():
-            player.stop()
-
         trayMenu = QMenu()
         showAction = QAction(QIcon(":eye.png"),"Show main window", self)
         hideAction = QAction(QIcon(":eye-close.png"), "Hide main window", self)
@@ -219,51 +187,34 @@ class MainWindow(QMainWindow):
         trayMenu.addAction(stopAdhanTrayAction)
         trayMenu.addAction(exitAction)
 
-        showAction.triggered.connect(show)
-        hideAction.triggered.connect(hide)
+        showAction.triggered.connect(self.show)
+        hideAction.triggered.connect(self.hideWindows)
         exitAction.triggered.connect(qApp.quit)
-        stopAdhanTrayAction.triggered.connect(stopAdhan)
+        stopAdhanTrayAction.triggered.connect(self.stopAdhan)
 
-        tray.setContextMenu(trayMenu)
-        tray.setVisible(True)
+        self.tray.setContextMenu(trayMenu)
+        self.tray.setVisible(True)
         
         # Menu 
-
-        def quit():
-            message = QMessageBox.question(self, "Quit ?", 
-            "do you want to quit ?", QMessageBox.No | QMessageBox.Yes, QMessageBox.No)
-            if (message == QMessageBox.Yes):
-                qApp.quit()
-                sys.exit()
-
-        def showSettings():
-            settingsWindow.exec()
-        
-
-        def showAbout():
-            about.exec()
-
-
-
         quitAction = QAction(QIcon(":door-open-out.png"), "&Quit", self)
         quitAction.setShortcut("Ctrl+Q")
-        quitAction.setToolTip("Quit the appplication")
-        quitAction.triggered.connect(quit)
+        quitAction.setToolTip("Quit the application")
+        quitAction.triggered.connect(self.quit)
 
         settingsAction = QAction(QIcon(":wrench.png"), "&Settings", self)
         settingsAction.setToolTip("Open settings window")
         settingsAction.setShortcut("Ctrl+S")
-        settingsAction.triggered.connect(showSettings)
+        settingsAction.triggered.connect(self.showSettings)
 
         stopAdhanAction = QAction(QIcon(":control-stop-square.png"), "S&top Adhan", self)
         settingsAction.setToolTip("Stop adhan")
         stopAdhanAction.setShortcut("Ctrl+T")
-        stopAdhanAction.triggered.connect(stopAdhan)
+        stopAdhanAction.triggered.connect(self.stopAdhan)
 
         aboutAction = QAction(QIcon(":information.png"), "&About", self)
         aboutAction.setToolTip("About the application")
         aboutAction.setShortcut("Ctrl+A")
-        aboutAction.triggered.connect(showAbout)
+        aboutAction.triggered.connect(self.showAbout)
 
 
         menu = self.menuBar()
@@ -276,134 +227,170 @@ class MainWindow(QMainWindow):
 
         helpMenu = menu.addMenu('&?')
         helpMenu.addAction(aboutAction)
-
-
-        def splitedTime():
-            formatedTime = str(datetime.now().strftime("%H:%M:%S"))
-            st = formatedTime.split(":")
-        def splitedTime():
-            formatedTime = str(datetime.now().strftime("%H:%M:%S"))
-            st = splitedTime = formatedTime.split(":")
-            return st
-
-        def now():
-            formatedTime = str(datetime.now().strftime("%H:%M:%S"))
-            return formatedTime
-
-
-
-
-    
-       
-        threadpool = QThreadPool()
-        def timeLoop():
-            s = int(splitedTime()[2])
-            m = int(splitedTime()[1])
-            h = int(splitedTime()[0])
-            sDeg = s * 6
-            mDeg = m * 6
-            hDeg = h * 30 + m / 2
-
-
-            imsakAdhan   =   str(times["imsak"])   + ":00"
-            fajrAdhan    =   str(times["fajr"])    + ":00"
-            dhuhrAdhan   =   str(times["dhuhr"])   + ":00"
-            asrAdhan     =   str(times["asr"])     + ":00"
-            maghribAdhan =   str(times["maghrib"]) + ":00"
-            ishaAdhan    =   str(times["isha"])    + ":00"
-            config = ConfigParser()
-            config.read("config.ini")
-            try:
-                notifconfig = str(config["Settings"]["Notification"])
-            except KeyError:
-                notifconfig = "True"
-
-            if(str(now()) == imsakAdhan):
-                print(notifconfig)
-                try:
-                    if(notifconfig == "True"):
-                        tray.showMessage("Salat Recall" , "Its time for Imsak !", icon, 5000)
-                except KeyError:
-                    pass
-                playAdhan()
-
-            if(str(now()) == fajrAdhan):
-                try:
-                    if(notifconfig == "True"):
-                        tray.showMessage("Salat Recall" , "Its time for Fajr prayer !", icon, 5000)
-                except KeyError:
-                    pass
-                playAdhan()
-
-            if(str(now()) == dhuhrAdhan):
-                try:
-                    if(notifconfig == "True"):
-                        tray.showMessage("Salat Recall" , "Its time for Dhuhr prayer !", icon, 5000)
-                except KeyError:
-                    pass
-                playAdhan()
-
-            if(str(now()) == asrAdhan):
-                try:
-                    if(notifconfig == "True"):
-                        tray.showMessage("Salat Recall" , "Its time for Asr prayer !", icon, 5000)
-                except KeyError:
-                    pass
-
-                playAdhan()
-
-            if(str(now()) == maghribAdhan):
-                try:
-                    if(notifconfig == "True"):
-                        tray.showMessage("Salat Recall" , "Its time for Maghrib prayer !", icon, 5000)
-                except KeyError:
-                    pass
-                playAdhan()
-
-            if(str(now()) == ishaAdhan):
-                try:
-                    if(notifconfig == "True"):
-                        tray.showMessage("Salat Recall" , "Its time for Isha prayer !", icon, 5000)
-                except KeyError:
-                    pass
-                playAdhan()
-
-            # Displaying Current Prayer
-            if(str(now()) >= imsakAdhan):
-                labelCurrentPrayerTime.setText("Imsak")
-                labelNextPrayerTime.setText("Fajr")
-
-            if(str(now()) >= fajrAdhan):
-                labelCurrentPrayerTime.setText("Fajr")
-                labelNextPrayerTime.setText("Dhuhr")
-
-            if(str(now()) >= dhuhrAdhan):
-                labelCurrentPrayerTime.setText("Dhuhr")
-                labelNextPrayerTime.setText("Asr")
-
-            if(str(now()) >= asrAdhan):
-                labelCurrentPrayerTime.setText("Asr")
-                labelNextPrayerTime.setText("Maghrib")
-                
-            if(str(now()) >= maghribAdhan):
-                labelCurrentPrayerTime.setText("Maghrib")
-                labelNextPrayerTime.setText("Isha")
-
-            if(str(now()) >= ishaAdhan or str(now()) < fajrAdhan):
-                labelCurrentPrayerTime.setText("Isha")
-                labelNextPrayerTime.setText("Fajr")
-
-        def threadedLoop():
-            worker = Worker(timeLoop)
-            threadpool.start(worker)
-
-
-
-
         timer = QTimer(self)
-        timer.timeout.connect(threadedLoop)
-
+        timer.timeout.connect(self.timeLoop)
         timer.start(1000)
+
+
+    def showSettings(self):
+        self.settingsWindow.exec()
+    
+
+    def showAbout(self):
+        self.aboutWindow.exec()
+
+    def hideWindows(self):
+        self.hide()
+        self.settingsWindow.hide()
+        self.about.hide()
+
+
+    def splitedTime():
+        formatedTime = str(datetime.now().strftime("%H:%M:%S"))
+        st = splitedTime = formatedTime.split(":")
+        return st
+
+    def now(self):
+        formatedTime = str(datetime.now().strftime("%H:%M:%S"))
+        return formatedTime
+
+   
+    def threadedLoop(self):
+        threadpool = QThreadPool(self)
+        worker = Worker(self.timeLoop)
+        threadpool.start(worker)
+
+    def showTrayMessage(self, message):
+
+        self.tray.showMessage("Salat Recall" , "Its time for " + message + " prayer !", self.icon, 5000)
+
+    def playAdhan(self):
+        config = ConfigParser()
+        config.read('config.ini')
+        adhanconfig = str(config["Settings"]["Adhan"])
+        try:
+            if(adhanconfig == "True"):
+                url = QUrl.fromLocalFile("adhan.wav")
+                adhan = QMediaContent(url)
+                self.player.setMedia(adhan)
+                try:
+                    self.player.setVolume(int(config["Settings"]["Vol"]))
+                except KeyError:
+                    pass
+                self.player.play()
+            else:
+                    pass
+        except KeyError:
+            pass
+
+    def stopAdhan(self):
+        self.player.stop()
+
+    def quit(self):
+        message = QMessageBox.question(self, "Quit ?", 
+        "do you want to quit ?", QMessageBox.No | QMessageBox.Yes, QMessageBox.No)
+        if (message == QMessageBox.Yes):
+            qApp.quit()
+            sys.exit()
+       
+    def timeLoop(self):
+        imsakAdhan   =   str(self.times["imsak"])   + ":00"
+        fajrAdhan    =   str(self.times["fajr"])    + ":00"
+        dhuhrAdhan   =   str(self.times["dhuhr"])   + ":00"
+        asrAdhan     =   str(self.times["asr"])     + ":00"
+        maghribAdhan =   str(self.times["maghrib"]) + ":00"
+        ishaAdhan    =   str(self.times["isha"])    + ":00"
+        config = ConfigParser()
+        config.read("config.ini")
+
+
+
+        try:
+            notifconfig = str(config["Settings"]["Notification"])
+        except KeyError:
+            notifconfig = "True"
+
+        if(self.now() == imsakAdhan):
+            try:
+                if(notifconfig == "True"):
+                    self.showTrayMessage("Imsak")
+            except KeyError:
+                pass
+            #self.playAdhan()
+
+        if(str(self.now()) == fajrAdhan):
+            try:
+                if(notifconfig == "True"):
+                    self.showTrayMessage("Fajr")
+            except KeyError:
+                pass
+            #self.playAdhan()
+
+        if(str(self.now()) == dhuhrAdhan):
+            try:
+                if(notifconfig == "True"):
+                    self.showTrayMessage("Dhuhr")
+                pass
+            except KeyError:
+                pass
+            self.playAdhan()
+
+        if(str(self.now()) == asrAdhan):
+            try:
+                if(notifconfig == "True"):
+                    self.showTrayMessage("Asr")
+            except KeyError:
+                pass
+
+            #self.playAdhan()
+
+        if(str(self.now()) == maghribAdhan):
+            try:
+                if(notifconfig == "True"):
+                    self.showTrayMessage("Maghrib")
+            except KeyError:
+                pass
+            #self.playAdhan()
+
+        if(self.now() == ishaAdhan):
+            try:
+                if(notifconfig == "True"):
+                    self.showTrayMessage("Isha")
+            except KeyError:
+                pass
+            #self.playAdhan()
+
+        print("Now:" + self.now())
+        # Displaying Current Prayer
+        if(str(self.now()) >= imsakAdhan):
+            self.labelCurrentPrayerTime.setText("Imsak")
+            self.labelNextPrayerTime.setText("Fajr")
+
+        if(str(self.now()) >= fajrAdhan):
+            self.labelCurrentPrayerTime.setText("Fajr")
+            self.labelNextPrayerTime.setText("Dhuhr")
+
+        if(str(self.now()) >= dhuhrAdhan):
+            self.labelCurrentPrayerTime.setText("Dhuhr")
+            self.labelNextPrayerTime.setText("Asr")
+
+        if(str(self.now()) >= asrAdhan):
+            self.labelCurrentPrayerTime.setText("Asr")
+            self.labelNextPrayerTime.setText("Maghrib")
+            
+        if(str(self.now()) >= maghribAdhan):
+            self.labelCurrentPrayerTime.setText("Maghrib")
+            self.labelNextPrayerTime.setText("Isha")
+
+        if(str(self.now()) >= ishaAdhan or str(self.now()) < fajrAdhan):
+            self.labelCurrentPrayerTime.setText("Isha")
+            self.labelNextPrayerTime.setText("Fajr")
+        
+
+
+
+
+
     def closeEvent(self, event):
         message = QMessageBox.question(self, "Quit ?",
         "the application will no longer stay in the tray area do you want to quit ?",

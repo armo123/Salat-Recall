@@ -3,6 +3,7 @@
 
 
 
+import configparser
 import sys
 from PyQt5.QtGui import QIcon, QRegExpValidator
 from PyQt5.QtWidgets import QAction, QApplication, QDialog, QGroupBox, QHBoxLayout, QMessageBox, QPushButton,\
@@ -15,140 +16,141 @@ from configparser import ConfigParser
     
 
 class SettingsWindow(QDialog):
-    state = False
-    changed = False
     def __init__(self, *args, **kwargs):
         super(SettingsWindow, self).__init__(*args, **kwargs)
         # Reding config file to file the text filds
-        config = ConfigParser()
-        config.read("config.ini")
+        self.config = ConfigParser()
+        self.config.read("config.ini")
+        self.state = False
+        self.change = False
     
+   
 
         # Creating widgets 
 
-        labelLatitude = QLabel("Latitude:")
-        latitude = QLineEdit()
-        latitude.setFixedWidth(50)
-        latitude.setMaxLength(7)
+        self.labelLatitude = QLabel("Latitude:")
+        self.latitude = QLineEdit()
+        self.latitude.setFixedWidth(50)
+        self.latitude.setMaxLength(7)
         rx = QRegExp("\-{0,1}[0-9]{0,2}\.[0-9]{2}")
-        latitude.setValidator(QRegExpValidator(rx))
+        self.latitude.setValidator(QRegExpValidator(rx))
 
         try:
-            configlatitude = config["Settings"]["Latitude"]
-            latitude.setText(configlatitude)
+            self.configlatitude = self.config["Settings"]["Latitude"]
+            self.latitude.setText(self.configlatitude)
         except KeyError :
-            latitude.setText("00.00")
+            self.latitude.setText("00.00")
 
         layoutLatitude = QHBoxLayout()
-        layoutLatitude.addWidget(labelLatitude)
+        layoutLatitude.addWidget(self.labelLatitude)
         layoutLatitude.addStretch()
-        layoutLatitude.addWidget(latitude)
-        longitudeLabel = QLabel("Longitude")
-        longitude = QLineEdit()
-        longitude.setFixedWidth(50)
-        longitude.setMaxLength(7)
-        longitude.setValidator(QRegExpValidator(rx))
+        layoutLatitude.addWidget(self.latitude)
+        self.longitudeLabel = QLabel("Longitude")
+        self.longitude = QLineEdit()
+        self.longitude.setFixedWidth(50)
+        self.longitude.setMaxLength(7)
+        self.longitude.setValidator(QRegExpValidator(rx))
 
         try:
-            configlongitude = config["Settings"]["Longitude"]
-            longitude.setText(configlongitude)
+            configlongitude = self.config["Settings"]["Longitude"]
+            self.longitude.setText(configlongitude)
         except KeyError:
-            longitude.setText("00.00")
+            self.longitude.setText("00.00")
 
-        layoutLongitude  = QHBoxLayout()
-        layoutLongitude.addWidget(longitudeLabel)
-        layoutLongitude.addStretch()
-        layoutLongitude.addWidget(longitude)
+        layoutlongitude  = QHBoxLayout()
+        layoutlongitude.addWidget(self.longitudeLabel)
+        layoutlongitude.addStretch()
+        layoutlongitude.addWidget(self.longitude)
         loactionLayout = QVBoxLayout()
         loactionLayout.addLayout(layoutLatitude)
-        loactionLayout.addLayout(layoutLongitude)
+        loactionLayout.addLayout(layoutlongitude)
 
-        labelTuneImsak = QLabel("Imsak:")
-        imsak = QLineEdit()
-        imsak.setMaxLength(6)
-        imsak.setMaximumWidth(50)
+        self.labelTuneImsak = QLabel("Imsak:")
+        self.imsak = QLineEdit()
+        self.imsak.setMaxLength(6)
+        self.imsak.setMaximumWidth(50)
         rxHours = QRegExp("\-{0,1}[0-9]{0,1}[0-9]{0,1}[0-9]{0,1}\.[0-9]{0,2}")
-        imsak.setValidator(QRegExpValidator(rxHours))
+        self.imsak.setValidator(QRegExpValidator(rxHours))
 
         try:
-            configimsak = config["Settings"]["Imsak"]
-            imsak.setText(configimsak)
+            self.configimsak = self.config["Settings"]["Imsak"]
+            self.imsak.setText(self.configimsak)
         except KeyError:
-            imsak.setText("00.00")
+            self.imsak.setText("00.00")
 
         layoutImsak = QHBoxLayout()
-        layoutImsak.addWidget(labelTuneImsak)
+        layoutImsak.addWidget(self.labelTuneImsak)
         layoutImsak.addStretch()
-        layoutImsak.addWidget(imsak)
-        labelTuneFajr = QLabel("Fajr:")
-        fajr = QLineEdit()
-        fajr.setMaxLength(6)
-        fajr.setMaximumWidth(50)
-        fajr.setValidator(QRegExpValidator(rxHours))
+        layoutImsak.addWidget(self.imsak)
+        self.labelTuneFajr = QLabel("Fajr:")
+        self.fajr = QLineEdit()
+        self.fajr.setMaxLength(6)
+        self.fajr.setMaximumWidth(50)
+        self.fajr.setValidator(QRegExpValidator(rxHours))
         try:
-            fajrconfig = config["Settings"]["Fajr"]
-            fajr.setText(fajrconfig)
+            fajrconfig = self.config["Settings"]["Fajr"]
+            self.fajr.setText(fajrconfig)
         except KeyError:
-            fajr.setText("00.00")
+            self.fajr.setText("00.00")
         fajrLayout = QHBoxLayout()
-        fajrLayout.addWidget(labelTuneFajr)
-        fajrLayout.addWidget(fajr)
-        dhuhrTuneLabel = QLabel("Dhuhr:")
-        dhuhr = QLineEdit()
-        dhuhr.setMaxLength(6)
-        dhuhr.setMaximumWidth(50)
-        dhuhr.setValidator(QRegExpValidator(rxHours))
+        fajrLayout.addWidget(self.labelTuneFajr)
+        fajrLayout.addWidget(self.fajr)
+        self.dhuhrTuneLabel = QLabel("Dhuhr:")
+        self.dhuhr = QLineEdit()
+        self.dhuhr.setMaxLength(6)
+        self.dhuhr.setMaximumWidth(50)
+        self.dhuhr.setValidator(QRegExpValidator(rxHours))
         try:
-            dhuhrconfig = config["Settings"]["Dhuhr"]
-            dhuhr.setText(dhuhrconfig)
+            dhuhrconfig = self.config["Settings"]["Dhuhr"]
+            self.dhuhr.setText(dhuhrconfig)
         except KeyError:
-            dhuhr.setText("00.00")
+            self.dhuhr.setText("00.00")
         layoutDhuhr = QHBoxLayout()
-        layoutDhuhr.addWidget(dhuhrTuneLabel)
-        layoutDhuhr.addWidget(dhuhr)
+        layoutDhuhr.addWidget(self.dhuhrTuneLabel)
+        layoutDhuhr.addWidget(self.dhuhr)
         labelTuneAsr = QLabel("Asr")
-        asr = QLineEdit()
-        asr.setMaxLength(6)
-        asr.setMaximumWidth(50)
-        asr.setValidator(QRegExpValidator(rxHours))
+        self.asr = QLineEdit()
+        self.asr.setMaxLength(6)
+        self.asr.setMaximumWidth(50)
+        self.asr.setValidator(QRegExpValidator(rxHours))
 
         try:
-            asrconfig = config["Settings"]["Asr"]
-            asr.setText(asrconfig)
+            asrconfig = self.config["Settings"]["Asr"]
+            self.asr.setText(asrconfig)
         except KeyError:
 
-            asr.setText("00.00")
+            self.asr.setText("00.00")
         layoutAsr = QHBoxLayout()
         layoutAsr.addWidget(labelTuneAsr)
-        layoutAsr.addWidget(asr)
-        labelTuneMaghrib = QLabel("Maghrib:")
-        maghrib = QLineEdit()
-        maghrib.setMaxLength(6)
-        maghrib.setMaximumWidth(50)
-        maghrib.setValidator(QRegExpValidator(rxHours))
+        layoutAsr.addWidget(self.asr)
+        self.labelTuneMaghrib = QLabel("Maghrib:")
+        self.maghrib = QLineEdit()
+        self.maghrib.setMaxLength(6)
+        self.maghrib.setMaximumWidth(50)
+        self.maghrib.setValidator(QRegExpValidator(rxHours))
 
         try:
-            configmaghrib = config["Settings"]["Maghrib"]
-            maghrib.setText(configmaghrib)
+            configmaghrib = self.config["Settings"]["Maghrib"]
+            self.maghrib.setText(configmaghrib)
         except KeyError:
+            self.maghrib.setText("00.00")
 
-            maghrib.setText("00.00")
         maghribLayout = QHBoxLayout()
-        maghribLayout.addWidget(labelTuneMaghrib)
-        maghribLayout.addWidget(maghrib)
-        labelTuneIsha = QLabel("Isha:")
-        isha = QLineEdit()
-        isha.setMaxLength(6)
-        isha.setMaximumWidth(50)
-        isha.setValidator(QRegExpValidator(rxHours))
+        maghribLayout.addWidget(self.labelTuneMaghrib)
+        maghribLayout.addWidget(self.maghrib)
+        self.labelTuneIsha = QLabel("Isha:")
+        self.isha = QLineEdit()
+        self.isha.setMaxLength(6)
+        self.isha.setMaximumWidth(50)
+        self.isha.setValidator(QRegExpValidator(rxHours))
         try:
-            configisha = config["Settings"]["Isha"]
-            isha.setText(configisha)
+            configisha = self.config["Settings"]["Isha"]
+            self.isha.setText(configisha)
         except KeyError:
             isha.setText("00.00")
         layoutIsha = QHBoxLayout()
-        layoutIsha.addWidget(labelTuneIsha)
-        layoutIsha.addWidget(isha)
+        layoutIsha.addWidget(self.labelTuneIsha)
+        layoutIsha.addWidget(self.isha)
 
 
         tunningLayout = QVBoxLayout()
@@ -159,52 +161,52 @@ class SettingsWindow(QDialog):
         tunningLayout.addLayout(maghribLayout)
         tunningLayout.addLayout(layoutIsha)
         
-        adhanLabel = QLabel("No adhan")
-        adhan = QCheckBox()
+        self.adhanLabel = QLabel("No adhan")
+        self.adhan = QCheckBox()
         try:
-            checked = config["Settings"]["Adhan"]
+            checked = self.config["Settings"]["Adhan"]
         except:
             checked = "False"
 
         if(checked == "False"):
-            adhan.setChecked(True)
+            self.adhan.setChecked(True)
         else:
-            adhan.setChecked(False)
+            self.adhan.setChecked(False)
         
-        notifLabel = QLabel("No notifications")
-        notification = QCheckBox()
+        self.notifLabel = QLabel("No notifications")
+        self.notification = QCheckBox()
         try:
-            checkedNotif = config["Settings"]["Notification"]
+            checkedNotif = self.config["Settings"]["Notification"]
         except KeyError:
             checkedNotif = "False"
 
         if(checkedNotif == "False"):
-            notification.setChecked(True)
+            self.notification.setChecked(True)
         else:
-            notification.setChecked(False)
+            self.notification.setChecked(False)
 
         notifLayout = QHBoxLayout()
-        notifLayout.addWidget(notifLabel)
-        notifLayout.addWidget(notification)
+        notifLayout.addWidget(self.notifLabel)
+        notifLayout.addWidget(self.notification)
 
         layoutAdhan = QHBoxLayout()
-        layoutAdhan.addWidget(adhanLabel)
+        layoutAdhan.addWidget(self.adhanLabel)
         layoutAdhan.addStretch
-        layoutAdhan.addWidget(adhan)
+        layoutAdhan.addWidget(self.adhan)
         layoutGroupAdhan = QVBoxLayout()
 
-        volumeAdhan = QSlider(Qt.Horizontal)
+        self.volumeAdhan = QSlider(Qt.Horizontal)
         try:
-            vol = config["Settings"]["Vol"]
+            vol = self.config["Settings"]["Vol"]
         except KeyError:
             vol = "50"
-        volumeAdhan.setValue(int(vol))
+        self.volumeAdhan.setValue(int(vol))
         volumeLayout = QHBoxLayout()
-        volumeLayout.addWidget(volumeAdhan)
-        labelVol = QLabel()
-        labelVol.setText("Volume:" + str(volumeAdhan.value()))
+        volumeLayout.addWidget(self.volumeAdhan)
+        self.labelVol = QLabel()
+        self.labelVol.setText("Volume:" + str(self.volumeAdhan.value()))
         layoutLabelVol = QHBoxLayout()
-        layoutLabelVol.addWidget(labelVol)
+        layoutLabelVol.addWidget(self.labelVol)
         layoutGroupAdhan.addLayout(layoutAdhan)
         layoutGroupAdhan.addLayout(notifLayout)
         layoutGroupAdhan.addLayout(volumeLayout)
@@ -217,10 +219,10 @@ class SettingsWindow(QDialog):
 
 
         
-        saveButton = QPushButton(QIcon("images/disk.png"), "Save")
+        self.saveButton = QPushButton(QIcon("images/disk.png"), "Save")
         layoutSave = QHBoxLayout()
         layoutSave.addStretch()
-        layoutSave.addWidget(saveButton)
+        layoutSave.addWidget(self.saveButton)
         
         locationGroup = QGroupBox("Location:")
         locationGroup.setLayout(loactionLayout)
@@ -228,21 +230,21 @@ class SettingsWindow(QDialog):
         tuneGroup.setLayout(tunningLayout)
 
 
-        methodList = QComboBox()
+        self.methodList = QComboBox()
         methods = ["MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari"]
-        methodList.addItems(methods)
+        self.methodList.addItems(methods)
 
         try: 
-            configmethod = config["Settings"]["Method"]
+            configmethod = self.config["Settings"]["Method"]
             for i in range(len(methods)):
                 if (methods[i] == configmethod):
-                    methodList.setCurrentIndex(i)
+                    self.methodList.setCurrentIndex(i)
         except KeyError:
             pass
 
 
         methodLayout = QVBoxLayout()
-        methodLayout.addWidget(methodList)
+        methodLayout.addWidget(self.methodList)
         methodsGroup = QGroupBox("Calculation Method:")
         methodsGroup.setLayout(methodLayout)
 
@@ -261,132 +263,125 @@ class SettingsWindow(QDialog):
 
         # Saving settings in ini file
 
+        self.latitude.textChanged[str].connect(self.changed)
+        self.longitude.textChanged[str].connect(self.changed)
+        self.imsak.textChanged[str].connect(self.changed)
+        self.fajr.textChanged[str].connect(self.changed)
+        self.dhuhr.textChanged[str].connect(self.changed)
+        self.asr.textChanged[str].connect(self.changed)
+        self.maghrib.textChanged[str].connect(self.changed)
+        self.isha.textChanged[str].connect(self.changed)
+        self.methodList.currentTextChanged[str].connect(self.changed)
+        self.volumeAdhan.valueChanged.connect(self.volumeChanged)
+        self.adhan.stateChanged.connect(self.stateCh)
+        self.notification.stateChanged.connect(self.stateCh)
+        self.saveButton.clicked.connect(self.saveConfig)
 
-        def changed():
-            self.changed = True
+    def changed(self):
+        self.change = True
 
-        def volumeChanged():
-            labelVol.setText("Volume:" + str(volumeAdhan.value()))
-            self.state = True
+    def volumeChanged(self):
+        self.labelVol.setText("Volume:" + str(self.volumeAdhan.value()))
+        self.state = True
 
-        def stateCh():
-            self.state = True
+    def stateCh(self):
+        self.state = True
 
+    def saveConfig(self):
+        if(len(self.latitude.text()) > 0):
+            latitudeValue = self.latitude.text()
+        else:
+            self.latitude.setText("00.00")
+            latitudeValue = "00.00"
+
+        if(len(self.longitude.text()) > 0):
+            longitudeValue = self.longitude.text()
+        else:
+            self.longitude.setText("00.00")
+            longitudeValue = "00.00"
         
+        if(len(self.imsak.text()) > 0):
+            imsakValue = self.imsak.text()
+        else:
+            self.imsak.setText("00.00") 
+            imsakValue = "00.00"
 
+        if(len(self.fajr.text()) > 0):
+            fajrValue = self.fajr.text()
+        else:
+            self.fajr.setText("00.00")
+            fajrValue = "00.00"
 
-        latitude.textChanged[str].connect(changed)
-        longitude.textChanged[str].connect(changed)
-        imsak.textChanged[str].connect(changed)
-        fajr.textChanged[str].connect(changed)
-        dhuhr.textChanged[str].connect(changed)
-        asr.textChanged[str].connect(changed)
-        maghrib.textChanged[str].connect(changed)
-        isha.textChanged[str].connect(changed)
-        methodList.currentTextChanged[str].connect(changed)
-        volumeAdhan.valueChanged.connect(volumeChanged)
-        adhan.stateChanged.connect(stateCh)
-        notification.stateChanged.connect(stateCh)
-
-
-        def saveConfig():
-            if(len(latitude.text()) > 0):
-                latitudeValue = latitude.text()
-            else:
-                latitude.setText("00.00")
-                latitudeValue = "00.00"
-
-            if(len(longitude.text()) > 0):
-                longitudeValue = longitude.text()
-            else:
-                longitude.setText("00.00")
-                longitudeValue = "00.00"
-            
-            if(len(imsak.text()) > 0):
-                imsakValue = imsak.text()
-            else:
-                imsak.setText("00.00") 
-                imsakValue = "00.00"
-
-            if(len(fajr.text()) > 0):
-                fajrValue = fajr.text()
-            else:
-                fajr.setText("00.00")
-                fajrValue = "00.00"
-
-            if(len(dhuhr.text()) > 0):
-                dhuhrValue = dhuhr.text()
-            else:
-                dhuhr.setText("00.00")
-                dhuhrValue = "00.00"
-            
-            if(len(asr.text()) > 0):
-                asrValue = asr.text()
-            else:
-                asr.setText("00.00")
-                asrValue = "00.00"
-            
-            if(len(maghrib.text())> 0):
-                maghribValue = maghrib.text()
-            else:
-                maghrib.setText("00.00")
-                maghribValue = "00.00"
-
-            if(len(isha.text()) > 0):
-                ishaValue = isha.text()
-            else:
-                isha.setText("00.00")
-                ishaValue = "00.00"
-
-            method = methodList.currentText()
-
-            if(adhan.isChecked() == True):
-                noAdhan = "False"
-            else:
-                noAdhan = "True"
-
-            if(notification.isChecked() == True):
-                noNotif = "False"
-            else:
-                noNotif = "True"
-
-            adhanVol = str(volumeAdhan.value())  
-
-
-            config["Settings"]={'Latitude':  latitudeValue,
-                                'Longitude': longitudeValue,
-                                'Imsak':     imsakValue,
-                                'Fajr':      fajrValue,
-                                'Dhuhr':     dhuhrValue,
-                                'Asr':       asrValue,
-                                'Maghrib':   maghribValue,
-                                'Isha':      ishaValue,
-                                'Method':    method,
-                                'Adhan':     noAdhan,
-                                'Vol':       adhanVol,
-                                'Notification': noNotif}                 
-                            
-            with open('config.ini', 'w') as configfile:
-                config.write(configfile)
-            if(self.changed == True):
-                QMessageBox.information(self, "Restart the App", 
-                "Please restart the Application")
-            self.changed = False
-            self.state = False
+        if(len(self.dhuhr.text()) > 0):
+            dhuhrValue = self.dhuhr.text()
+        else:
+            self.dhuhr.setText("00.00")
+            dhuhrValue = "00.00"
         
+        if(len(self.asr.text()) > 0):
+            asrValue = self.asr.text()
+        else:
+            self.asr.setText("00.00")
+            asrValue = "00.00"
+        
+        if(len(self.maghrib.text())> 0):
+            maghribValue = self.maghrib.text()
+        else:
+            self.maghrib.setText("00.00")
+            maghribValue = "00.00"
 
-        saveButton.clicked.connect(saveConfig)
+        if(len(self.isha.text()) > 0):
+            ishaValue = self.isha.text()
+        else:
+            self.isha.setText("00.00")
+            ishaValue = "00.00"
+
+        method = self.methodList.currentText()
+
+        if(self.adhan.isChecked() == True):
+            noAdhan = "False"
+        else:
+            noAdhan = "True"
+
+        if(self.notification.isChecked() == True):
+            noNotif = "False"
+        else:
+            noNotif = "True"
+
+        adhanVol = str(self.volumeAdhan.value())  
+
+        self.config["Settings"]={'Latitude':  latitudeValue,
+                            'longitude': longitudeValue,
+                            'Imsak':     imsakValue,
+                            'Fajr':      fajrValue,
+                            'Dhuhr':     dhuhrValue,
+                            'Asr':       asrValue,
+                            'Maghrib':   maghribValue,
+                            'Isha':      ishaValue,
+                            'Method':    method,
+                            'Adhan':     noAdhan,
+                            'Vol':       adhanVol,
+                            'Notification': noNotif}                 
+                        
+        with open('config.ini', 'w') as configfile:
+            self.config.write(configfile)
+        if(self.change == True):
+            QMessageBox.information(self, "Restart the App", 
+            "Please restart the Application")
+        self.change = False
+        self.state = False
+    
         
     def closeEvent(self, event):
-        if (self.changed == True or self.state == True):
+        if (self.change == True or self.state == True):
             message =  QMessageBox.question(self, "Quit without saving", 
             "Do you want to quit without saving ?", 
             QMessageBox.Yes| QMessageBox.No, QMessageBox.No)
             if (message == QMessageBox.No):
                 event.ignore()
             else:
-                self.changed = False
+                self.chang = False
                 return
-        self.changed = False
+        self.change = False
 
 

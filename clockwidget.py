@@ -18,7 +18,7 @@ class ClockWidget(QWidget):
 
         super(ClockWidget, self).__init__(*args, **kwargs)
 
-        pt = GetPrayerTimes()
+        self.pt = GetPrayerTimes()
 
         # Loading Images
         self.setFixedSize(210, 210)
@@ -30,16 +30,16 @@ class ClockWidget(QWidget):
         imgSalatHandleMin = QPixmap(":salatMinHandle.png")
 
         # Converting resouces into QGraphicsItems
-        imgHHandle = QGraphicsPixmapItem(imgHandleHoure)
-        imgHHandle.setTransformationMode(Qt.SmoothTransformation)
-        imgMHandle = QGraphicsPixmapItem(imgHandleMin)
-        imgMHandle.setTransformationMode(Qt.SmoothTransformation)
-        imgSHandle = QGraphicsPixmapItem(imgHandleSec)
-        imgSHandle.setTransformationMode(Qt.SmoothTransformation)
-        imgSHandleHoure = QGraphicsPixmapItem(imgSalatHandleHoure)
-        imgSHandleHoure.setTransformationMode(Qt.SmoothTransformation)
-        imgSHandleMin = QGraphicsPixmapItem(imgSalatHandleMin)
-        imgSHandleMin.setTransformationMode(Qt.SmoothTransformation)
+        self.imgHHandle = QGraphicsPixmapItem(imgHandleHoure)
+        self.imgHHandle.setTransformationMode(Qt.SmoothTransformation)
+        self.imgMHandle = QGraphicsPixmapItem(imgHandleMin)
+        self.imgMHandle.setTransformationMode(Qt.SmoothTransformation)
+        self.imgSHandle = QGraphicsPixmapItem(imgHandleSec)
+        self.imgSHandle.setTransformationMode(Qt.SmoothTransformation)
+        self.imgSHandleHoure = QGraphicsPixmapItem(imgSalatHandleHoure)
+        self.imgSHandleHoure.setTransformationMode(Qt.SmoothTransformation)
+        self.imgSHandleMin = QGraphicsPixmapItem(imgSalatHandleMin)
+        self.imgSHandleMin.setTransformationMode(Qt.SmoothTransformation)
 
         scene = QGraphicsScene(self)
         view = QGraphicsView(scene, self)
@@ -55,114 +55,115 @@ class ClockWidget(QWidget):
 
 
         scene.addPixmap(imgBg)
-        scene.addItem(imgSHandleHoure)
-        scene.addItem(imgSHandleMin)
-        scene.addItem(imgHHandle)
-        scene.addItem(imgMHandle)
-        scene.addItem(imgSHandle)
+        scene.addItem(self.imgSHandleHoure)
+        scene.addItem(self.imgSHandleMin)
+        scene.addItem(self.imgHHandle)
+        scene.addItem(self.imgMHandle)
+        scene.addItem(self.imgSHandle)
         
         midSecW = imgHandleSec.width() / 2
         midSecH = imgHandleSec.height() / 2
-        imgSHandle.setTransformOriginPoint(QPoint(midSecW, midSecH))
+        self.imgSHandle.setTransformOriginPoint(QPoint(midSecW, midSecH))
 
         midMinW = imgHandleMin.width() / 2
         midMinH = imgHandleMin.height() / 2
-        imgMHandle.setTransformOriginPoint(QPoint(midMinW, midMinH))
+        self.imgMHandle.setTransformOriginPoint(QPoint(midMinW, midMinH))
 
         midHoureW = imgHandleHoure.width() / 2
         midHoureH = imgHandleHoure.height() / 2
-        imgHHandle.setTransformOriginPoint(QPoint(midHoureW, midHoureH))
+        self.imgHHandle.setTransformOriginPoint(QPoint(midHoureW, midHoureH))
 
         midSHoureW = imgSalatHandleHoure.width() / 2
         midSHoureH = imgSalatHandleHoure.height() / 2
-        imgSHandleHoure.setTransformOriginPoint(QPoint(midSHoureW, midSHoureH))
+        self.imgSHandleHoure.setTransformOriginPoint(QPoint(midSHoureW, midSHoureH))
 
         midSMinW = imgSalatHandleMin.width() / 2
         midSMinH = imgSalatHandleMin.height() / 2
-        imgSHandleMin.setTransformOriginPoint(QPoint(midSMinW, midSMinH))
+        self.imgSHandleMin.setTransformOriginPoint(QPoint(midSMinW, midSMinH))
 
-        def getTime():
-            formatedTime = str(datetime.now().strftime("%H:%M:%S"))
-            st = splitedTime = formatedTime.split(":")
-            return st
+
             
 
 
         # Initiate handles position
-        s = int(getTime()[2])
-        m = int(getTime()[1])
-        h = int(getTime()[0])
+        s = int(self.getTime()[2])
+        m = int(self.getTime()[1])
+        h = int(self.getTime()[0])
 
-        imgSHandle.setRotation(s * 6)
-        imgMHandle.setRotation(m * 6)
-        imgHHandle.setRotation(h * 30 + m / 2)
+        self.imgSHandle.setRotation(s * 6)
+        self.imgMHandle.setRotation(m * 6)
+        self.imgHHandle.setRotation(h * 30 + m / 2)
         
-        def now():
-            formatedTime = str(datetime.now().strftime("%H:%M:%S"))
-            return formatedTime
 
-
-            
-
-        def rotateHandles():
-            s = int(getTime()[2])
-            m = int(getTime()[1])
-            h = int(getTime()[0])
-            imgSHandle.setRotation(s * 6)
-            imgMHandle.setRotation(m * 6)
-            imgHHandle.setRotation(h * 30  + m  / 2)
-
-            imsakAdhan   =   str(pt.times["imsak"])   + ":00"
-            fajrAdhan    =   str(pt.times["fajr"])    + ":00"
-            dhuhrAdhan   =   str(pt.times["dhuhr"])   + ":00"
-            asrAdhan     =   str(pt.times["asr"])     + ":00"
-            maghribAdhan =   str(pt.times["maghrib"]) + ":00"
-            ishaAdhan    =   str(pt.times["isha"])    + ":00"
-
-
-            if(str(now()) >= imsakAdhan):
-                spFajr = str(pt.times["fajr"]).split(":")
-                fajrM = int(spFajr[1])
-                fajrH = int (spFajr[0])
-                imgSHandleMin.setRotation(fajrM * 6)
-                imgSHandleHoure.setRotation(fajrH * 30 + fajrH / 2)
-
-            if(str(now()) >= fajrAdhan):
-                spDhuhr = str(pt.times["dhuhr"]).split(":")
-                dhuhrM = int(spDhuhr[1])
-                dhuhrH = int (spDhuhr[0])
-                imgSHandleMin.setRotation(dhuhrM * 6)
-                imgSHandleHoure.setRotation(dhuhrH * 30 + dhuhrM / 2)
-
-            if(str(now()) >= dhuhrAdhan):
-                spAsr = str(pt.times["asr"]).split(":")
-                asrM = int(spAsr[1])
-                asrH = int (spAsr[0])
-                imgSHandleMin.setRotation(asrM * 6)
-                imgSHandleHoure.setRotation(asrH * 30 + asrM / 2)
-
-            if(str(now()) >= asrAdhan):
-                spMaghrib = str(pt.times["maghrib"]).split(":")
-                maghribM = int(spMaghrib[1])
-                maghribH = int (spMaghrib[0])
-                imgSHandleMin.setRotation(maghribM * 6)
-                imgSHandleHoure.setRotation(maghribH * 30 + maghribM / 2)
-
-            if(str(now()) >= maghribAdhan):
-                spIsha = str(pt.times["isha"]).split(":")
-                ishaM = int(spIsha[1])
-                ishaH = int (spIsha[0])
-                imgSHandleMin.setRotation(ishaM * 6)
-                imgSHandleHoure.setRotation(ishaH * 30 + ishaM / 2)
-
-            if(str(now()) >= ishaAdhan or now() < imsakAdhan):
-                spImsak = str(pt.times["imsak"]).split(":")
-                imsakM = int(spImsak[1])
-                imsakH = int (spImsak[0])
-                imgSHandleMin.setRotation(imsakM * 6)
-                imgSHandleHoure.setRotation(imsakH * 30 + imsakM / 2)
 
         timer = QTimer(self)
-        timer.timeout.connect(rotateHandles)
+        timer.timeout.connect(self.rotateHandles)
         timer.start(1000)
 
+
+    def rotateHandles(self):
+        s = int(self.getTime()[2])
+        m = int(self.getTime()[1])
+        h = int(self.getTime()[0])
+        self.imgSHandle.setRotation(s * 6)
+        self.imgMHandle.setRotation(m * 6)
+        self.imgHHandle.setRotation(h * 30  + m  / 2)
+
+        imsakAdhan   =   str(self.pt.times["imsak"])   + ":00"
+        fajrAdhan    =   str(self.pt.times["fajr"])    + ":00"
+        dhuhrAdhan   =   str(self.pt.times["dhuhr"])   + ":00"
+        asrAdhan     =   str(self.pt.times["asr"])     + ":00"
+        maghribAdhan =   str(self.pt.times["maghrib"]) + ":00"
+        ishaAdhan    =   str(self.pt.times["isha"])    + ":00"
+
+
+        if(str(self.now()) >= imsakAdhan):
+            spFajr = str(self.pt.times["fajr"]).split(":")
+            fajrM = int(spFajr[1])
+            fajrH = int (spFajr[0])
+            self.imgSHandleMin.setRotation(fajrM * 6)
+            self.imgSHandleHoure.setRotation(fajrH * 30 + fajrH / 2)
+
+        if(str(self.now()) >= fajrAdhan):
+            spDhuhr = str(self.pt.times["dhuhr"]).split(":")
+            dhuhrM = int(spDhuhr[1])
+            dhuhrH = int (spDhuhr[0])
+            self.imgSHandleMin.setRotation(dhuhrM * 6)
+            self.imgSHandleHoure.setRotation(dhuhrH * 30 + dhuhrM / 2)
+
+        if(str(self.now()) >= dhuhrAdhan):
+            spAsr = str(self.pt.times["asr"]).split(":")
+            asrM = int(spAsr[1])
+            asrH = int (spAsr[0])
+            self.imgSHandleMin.setRotation(asrM * 6)
+            self.imgSHandleHoure.setRotation(asrH * 30 + asrM / 2)
+
+        if(str(self.now()) >= asrAdhan):
+            spMaghrib = str(self.pt.times["maghrib"]).split(":")
+            maghribM = int(spMaghrib[1])
+            maghribH = int (spMaghrib[0])
+            self.imgSHandleMin.setRotation(maghribM * 6)
+            self.imgSHandleHoure.setRotation(maghribH * 30 + maghribM / 2)
+
+        if(str(self.now()) >= maghribAdhan):
+            spIsha = str(self.pt.times["isha"]).split(":")
+            ishaM = int(spIsha[1])
+            ishaH = int (spIsha[0])
+            self.imgSHandleMin.setRotation(ishaM * 6)
+            self.imgSHandleHoure.setRotation(ishaH * 30 + ishaM / 2)
+
+        if(str(self.now()) >= ishaAdhan or self.now() < imsakAdhan):
+            spImsak = str(self.pt.times["imsak"]).split(":")
+            imsakM = int(spImsak[1])
+            imsakH = int (spImsak[0])
+            self.imgSHandleMin.setRotation(imsakM * 6)
+            self.imgSHandleHoure.setRotation(imsakH * 30 + imsakM / 2)
+
+    def getTime(self):
+        formatedTime = str(datetime.now().strftime("%H:%M:%S"))
+        st =  formatedTime.split(":")
+        return st
+
+    def now(self):
+        formatedTime = str(datetime.now().strftime("%H:%M:%S"))
+        return formatedTime
