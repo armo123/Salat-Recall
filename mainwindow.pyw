@@ -242,7 +242,7 @@ class MainWindow(QMainWindow):
     def hideWindows(self):
         self.hide()
         self.settingsWindow.hide()
-        self.about.hide()
+        self.aboutWindow.hide()
 
 
     def splitedTime():
