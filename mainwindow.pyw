@@ -231,7 +231,7 @@ class MainWindow(QMainWindow):
 
 
     def showSettings(self):
-        self.settingsWindow.exec()
+        self.settingsWindow.show()
     
 
     def showAbout(self):

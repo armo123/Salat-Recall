@@ -8,14 +8,16 @@ import sys
 from PyQt5.QtGui import QIcon, QRegExpValidator
 from PyQt5.QtWidgets import QAction, QApplication, QDialog, QGroupBox, QHBoxLayout, QMessageBox, QPushButton,\
      QVBoxLayout, QLabel, QLineEdit, QWidget, QComboBox, QCheckBox, QSlider
-from PyQt5.QtCore import QLine, QRegExp , Qt
+from PyQt5.QtCore import QLine, QRegExp, QThreadPool , Qt
 from PyQt5.QtGui import QRegExpValidator, QIcon
 from configparser import ConfigParser
+from worker import Worker
+from time import sleep
 
 
     
 
-class SettingsWindow(QDialog):
+class SettingsWindow(QWidget):
     def __init__(self, *args, **kwargs):
         super(SettingsWindow, self).__init__(*args, **kwargs)
         # Reding config file to file the text filds
@@ -260,6 +262,7 @@ class SettingsWindow(QDialog):
         self.setWindowTitle("Settings")
         self.setFixedSize(220, 480)
         self.setStyleSheet("QGroupBox{font: bold;}")
+        self.setWindowFlags(Qt.WindowCloseButtonHint)
 
         # Saving settings in ini file
 
@@ -275,7 +278,7 @@ class SettingsWindow(QDialog):
         self.volumeAdhan.valueChanged.connect(self.volumeChanged)
         self.adhan.stateChanged.connect(self.stateCh)
         self.notification.stateChanged.connect(self.stateCh)
-        self.saveButton.clicked.connect(self.saveConfig)
+        self.saveButton.clicked.connect(self.threadedSave)
 
     def changed(self):
         self.change = True
@@ -288,6 +291,7 @@ class SettingsWindow(QDialog):
         self.state = True
 
     def saveConfig(self):
+        sleep(0.5)
         if(len(self.latitude.text()) > 0):
             latitudeValue = self.latitude.text()
         else:
@@ -365,11 +369,17 @@ class SettingsWindow(QDialog):
                         
         with open('config.ini', 'w') as configfile:
             self.config.write(configfile)
+
         if(self.change == True):
             QMessageBox.information(self, "Restart the App", 
             "Please restart the Application")
         self.change = False
         self.state = False
+
+    def threadedSave(self):
+        threadPool = QThreadPool(self)
+        worker = Worker(self.saveConfig)
+        threadPool.start(worker)
     
         
     def closeEvent(self, event):
