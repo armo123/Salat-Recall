@@ -166,8 +166,6 @@ class MainWindow(QMainWindow):
         self.aboutWindow = AboutDialog()
 
 
-
-
         # Tray icon 
         self.icon = QIcon(":icon.png")
         self.setWindowIcon(self.icon)
@@ -316,7 +314,7 @@ class MainWindow(QMainWindow):
                     self.showTrayMessage("Imsak")
             except KeyError:
                 pass
-            #self.playAdhan()
+            self.playAdhan()
 
         if(str(self.now()) == fajrAdhan):
             try:
@@ -324,7 +322,7 @@ class MainWindow(QMainWindow):
                     self.showTrayMessage("Fajr")
             except KeyError:
                 pass
-            #self.playAdhan()
+            self.playAdhan()
 
         if(str(self.now()) == dhuhrAdhan):
             try:
@@ -342,7 +340,7 @@ class MainWindow(QMainWindow):
             except KeyError:
                 pass
 
-            #self.playAdhan()
+            self.playAdhan()
 
         if(str(self.now()) == maghribAdhan):
             try:
@@ -350,7 +348,7 @@ class MainWindow(QMainWindow):
                     self.showTrayMessage("Maghrib")
             except KeyError:
                 pass
-            #self.playAdhan()
+            self.playAdhan()
 
         if(self.now() == ishaAdhan):
             try:
@@ -358,7 +356,7 @@ class MainWindow(QMainWindow):
                     self.showTrayMessage("Isha")
             except KeyError:
                 pass
-            #self.playAdhan()
+            self.playAdhan()
 
         # Displaying Current Prayer
         if(str(self.now()) >= imsakAdhan):
@@ -385,10 +383,6 @@ class MainWindow(QMainWindow):
             self.labelCurrentPrayerTime.setText("Isha")
             self.labelNextPrayerTime.setText("Fajr")
         
-
-
-
-
 
     def closeEvent(self, event):
         message = QMessageBox.question(self, "Quit ?",

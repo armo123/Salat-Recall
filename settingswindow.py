@@ -147,7 +147,7 @@ class SettingsWindow(QDialog):
             configisha = self.config["Settings"]["Isha"]
             self.isha.setText(configisha)
         except KeyError:
-            isha.setText("00.00")
+            self.isha.setText("00.00")
         layoutIsha = QHBoxLayout()
         layoutIsha.addWidget(self.labelTuneIsha)
         layoutIsha.addWidget(self.isha)
@@ -219,7 +219,7 @@ class SettingsWindow(QDialog):
 
 
         
-        self.saveButton = QPushButton(QIcon("images/disk.png"), "Save")
+        self.saveButton = QPushButton(QIcon(":disk.png"), "Save")
         layoutSave = QHBoxLayout()
         layoutSave.addStretch()
         layoutSave.addWidget(self.saveButton)
