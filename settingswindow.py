@@ -264,7 +264,6 @@ class SettingsWindow(QWidget):
         self.setStyleSheet("QGroupBox{font: bold;}")
         self.setWindowFlags(Qt.WindowCloseButtonHint)
 
-        # Saving settings in ini file
 
         self.latitude.textChanged[str].connect(self.changed)
         self.longitude.textChanged[str].connect(self.changed)
@@ -278,20 +277,25 @@ class SettingsWindow(QWidget):
         self.volumeAdhan.valueChanged.connect(self.volumeChanged)
         self.adhan.stateChanged.connect(self.stateCh)
         self.notification.stateChanged.connect(self.stateCh)
-        self.saveButton.clicked.connect(self.threadedSave)
+        self.saveButton.clicked.connect(self.saveConfig)
 
     def changed(self):
         self.change = True
+        self.saveButton.setDisabled(False)
 
     def volumeChanged(self):
         self.labelVol.setText("Volume:" + str(self.volumeAdhan.value()))
         self.state = True
+        self.saveButton.setDisabled(False)
 
     def stateCh(self):
         self.state = True
+        self.saveButton.setDisabled(False)
+
+    # Saving settings in ini file
 
     def saveConfig(self):
-        sleep(0.5)
+        self.saveButton.setDisabled(True)
         if(len(self.latitude.text()) > 0):
             latitudeValue = self.latitude.text()
         else:
@@ -376,10 +380,6 @@ class SettingsWindow(QWidget):
         self.change = False
         self.state = False
 
-    def threadedSave(self):
-        threadPool = QThreadPool(self)
-        worker = Worker(self.saveConfig)
-        threadPool.start(worker)
     
         
     def closeEvent(self, event):

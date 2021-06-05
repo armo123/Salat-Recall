@@ -152,7 +152,6 @@ class MainWindow(QMainWindow):
         clockGroup.setLayout(clockLayout)
 
 
-
         # Main layout the containtainer of all layouts
         mainLayout = QGridLayout()
         mainLayout.addWidget(prayerTimesGroup, 1, 1)
@@ -302,7 +301,6 @@ class MainWindow(QMainWindow):
         config.read("config.ini")
 
 
-
         try:
             notifconfig = str(config["Settings"]["Notification"])
         except KeyError:
@@ -393,7 +391,6 @@ class MainWindow(QMainWindow):
             sys.exit()
         event.ignore()
         
-
 
 
 def main():
