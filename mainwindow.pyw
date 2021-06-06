@@ -4,14 +4,13 @@
 
 import sys
 from clockwidget import ClockWidget
-# import configparser
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout,\
         QHBoxLayout, QGridLayout, QWidget, QGroupBox, QSystemTrayIcon, QMenu,\
         QAction, qApp, QAction, QGridLayout, QGridLayout,\
         QMessageBox 
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt, QTimer, QUrl, QTimer, QThreadPool, qQNaN
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QSound
+from PyQt5.QtCore import QTimer, QUrl, QTimer, QThreadPool, qQNaN
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from worker import Worker
 from settingswindow import SettingsWindow
 from getprayertimes import GetPrayerTimes
@@ -261,7 +260,7 @@ class MainWindow(QMainWindow):
     def playAdhan(self):
         config = ConfigParser()
         config.read('config.ini')
-        adhanconfig = str(config["Settings"]["Adhan"])
+        adhanconfig = str(config["Settings"]["NoAdhan"])
         try:
             if(adhanconfig == "True"):
                 url = QUrl.fromLocalFile("adhan.wav")
