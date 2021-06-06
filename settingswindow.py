@@ -377,7 +377,10 @@ class SettingsWindow(QWidget):
     def threadedSave(self):
         t1 = Thread(target=self.saveConfig)
         t1.start()
-        t1.join()
+        try:
+            t1.join()
+        except Exception as e:
+            QMessageBox.warning(self, "Exception Warning", "Exceptin detail: " + e)
     
         
     def closeEvent(self, event):
