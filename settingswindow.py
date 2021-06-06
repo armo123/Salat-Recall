@@ -30,11 +30,7 @@ class SettingsWindow(QWidget):
         rx = QRegExp("\-{0,1}[0-9]{0,2}\.[0-9]{2}")
         self.latitude.setValidator(QRegExpValidator(rx))
 
-        try:
-            self.configlatitude = self.config["Settings"]["Latitude"]
-            self.latitude.setText(self.configlatitude)
-        except KeyError :
-            self.latitude.setText("00.00")
+
 
         layoutLatitude = QHBoxLayout()
         layoutLatitude.addWidget(self.labelLatitude)
@@ -46,11 +42,6 @@ class SettingsWindow(QWidget):
         self.longitude.setMaxLength(7)
         self.longitude.setValidator(QRegExpValidator(rx))
 
-        try:
-            configlongitude = self.config["Settings"]["Longitude"]
-            self.longitude.setText(configlongitude)
-        except KeyError:
-            self.longitude.setText("00.00")
 
         layoutlongitude  = QHBoxLayout()
         layoutlongitude.addWidget(self.longitudeLabel)
@@ -67,11 +58,7 @@ class SettingsWindow(QWidget):
         rxHours = QRegExp("\-{0,1}[0-9]{0,1}[0-9]{0,1}[0-9]{0,1}\.[0-9]{0,2}")
         self.imsak.setValidator(QRegExpValidator(rxHours))
 
-        try:
-            self.configimsak = self.config["Settings"]["Imsak"]
-            self.imsak.setText(self.configimsak)
-        except KeyError:
-            self.imsak.setText("00.00")
+
 
         layoutImsak = QHBoxLayout()
         layoutImsak.addWidget(self.labelTuneImsak)
@@ -82,11 +69,8 @@ class SettingsWindow(QWidget):
         self.fajr.setMaxLength(6)
         self.fajr.setMaximumWidth(50)
         self.fajr.setValidator(QRegExpValidator(rxHours))
-        try:
-            fajrconfig = self.config["Settings"]["Fajr"]
-            self.fajr.setText(fajrconfig)
-        except KeyError:
-            self.fajr.setText("00.00")
+
+        
         fajrLayout = QHBoxLayout()
         fajrLayout.addWidget(self.labelTuneFajr)
         fajrLayout.addWidget(self.fajr)
@@ -95,11 +79,7 @@ class SettingsWindow(QWidget):
         self.dhuhr.setMaxLength(6)
         self.dhuhr.setMaximumWidth(50)
         self.dhuhr.setValidator(QRegExpValidator(rxHours))
-        try:
-            dhuhrconfig = self.config["Settings"]["Dhuhr"]
-            self.dhuhr.setText(dhuhrconfig)
-        except KeyError:
-            self.dhuhr.setText("00.00")
+
         layoutDhuhr = QHBoxLayout()
         layoutDhuhr.addWidget(self.dhuhrTuneLabel)
         layoutDhuhr.addWidget(self.dhuhr)
@@ -109,12 +89,6 @@ class SettingsWindow(QWidget):
         self.asr.setMaximumWidth(50)
         self.asr.setValidator(QRegExpValidator(rxHours))
 
-        try:
-            asrconfig = self.config["Settings"]["Asr"]
-            self.asr.setText(asrconfig)
-        except KeyError:
-
-            self.asr.setText("00.00")
         layoutAsr = QHBoxLayout()
         layoutAsr.addWidget(labelTuneAsr)
         layoutAsr.addWidget(self.asr)
@@ -124,11 +98,6 @@ class SettingsWindow(QWidget):
         self.maghrib.setMaximumWidth(50)
         self.maghrib.setValidator(QRegExpValidator(rxHours))
 
-        try:
-            configmaghrib = self.config["Settings"]["Maghrib"]
-            self.maghrib.setText(configmaghrib)
-        except KeyError:
-            self.maghrib.setText("00.00")
 
         maghribLayout = QHBoxLayout()
         maghribLayout.addWidget(self.labelTuneMaghrib)
@@ -138,11 +107,7 @@ class SettingsWindow(QWidget):
         self.isha.setMaxLength(6)
         self.isha.setMaximumWidth(50)
         self.isha.setValidator(QRegExpValidator(rxHours))
-        try:
-            configisha = self.config["Settings"]["Isha"]
-            self.isha.setText(configisha)
-        except KeyError:
-            self.isha.setText("00.00")
+
         layoutIsha = QHBoxLayout()
         layoutIsha.addWidget(self.labelTuneIsha)
         layoutIsha.addWidget(self.isha)
@@ -158,27 +123,10 @@ class SettingsWindow(QWidget):
         
         self.adhanLabel = QLabel("No adhan")
         self.adhan = QCheckBox()
-        try:
-            checked = self.config["Settings"]["NoAdhan"]
-        except:
-            checked = "False"
-
-        if(checked == "False"):
-            self.adhan.setChecked(True)
-        else:
-            self.adhan.setChecked(False)
         
         self.notifLabel = QLabel("No notifications")
         self.notification = QCheckBox()
-        try:
-            checkedNotif = self.config["Settings"]["NoNotification"]
-        except KeyError:
-            checkedNotif = "False"
 
-        if(checkedNotif == "False"):
-            self.notification.setChecked(True)
-        else:
-            self.notification.setChecked(False)
 
         notifLayout = QHBoxLayout()
         notifLayout.addWidget(self.notifLabel)
@@ -191,11 +139,6 @@ class SettingsWindow(QWidget):
         layoutGroupAdhan = QVBoxLayout()
 
         self.volumeAdhan = QSlider(Qt.Horizontal)
-        try:
-            vol = self.config["Settings"]["Vol"]
-        except KeyError:
-            vol = "50"
-        self.volumeAdhan.setValue(int(vol))
         volumeLayout = QHBoxLayout()
         volumeLayout.addWidget(self.volumeAdhan)
         self.labelVol = QLabel()
@@ -221,19 +164,9 @@ class SettingsWindow(QWidget):
         tuneGroup = QGroupBox("Prayers time Tunning:")
         tuneGroup.setLayout(tunningLayout)
 
-
         self.methodList = QComboBox()
         self.methods = ["MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari"]
         self.methodList.addItems(self.methods)
-
-        try: 
-            configmethod = self.config["Settings"]["Method"]
-            for i in range(len(self.methods)):
-                if (self.methods[i] == configmethod):
-                    self.methodList.setCurrentIndex(i)
-        except KeyError:
-            pass
-
 
         methodLayout = QVBoxLayout()
         methodLayout.addWidget(self.methodList)
@@ -247,6 +180,8 @@ class SettingsWindow(QWidget):
         settingsLayout.addWidget(groupeAdhan)
         settingsLayout.addStretch()
         settingsLayout.addLayout(layoutSave)
+
+        self.loadConfig()
         self.setLayout(settingsLayout)
         self.setWindowIcon(QIcon(":wrench.png"))
         self.setWindowTitle("Settings")
@@ -372,7 +307,90 @@ class SettingsWindow(QWidget):
             thread.join()
         except Exception as e:
             QMessageBox.warning(self, "Exception Warning", "Exceptin detail: " + e)
+            
     
+    def loadConfig(self):
+        try:
+            self.configlatitude = self.config["Settings"]["Latitude"]
+            self.latitude.setText(self.configlatitude)
+        except KeyError :
+            self.latitude.setText("00.00")
+        
+        try:
+            configlongitude = self.config["Settings"]["Longitude"]
+            self.longitude.setText(configlongitude)
+        except KeyError:
+            self.longitude.setText("00.00")
+
+        try:
+            self.configimsak = self.config["Settings"]["Imsak"]
+            self.imsak.setText(self.configimsak)
+        except KeyError:
+            self.imsak.setText("00.00")
+
+        try:
+            fajrconfig = self.config["Settings"]["Fajr"]
+            self.fajr.setText(fajrconfig)
+        except KeyError:
+            self.fajr.setText("00.00")
+    
+        try:
+            dhuhrconfig = self.config["Settings"]["Dhuhr"]
+            self.dhuhr.setText(dhuhrconfig)
+        except KeyError:
+            self.dhuhr.setText("00.00")
+
+        try:
+            asrconfig = self.config["Settings"]["Asr"]
+            self.asr.setText(asrconfig)
+        except KeyError:
+            self.asr.setText("00.00")
+
+        try:
+            configmaghrib = self.config["Settings"]["Maghrib"]
+            self.maghrib.setText(configmaghrib)
+        except KeyError:
+            self.maghrib.setText("00.00")
+
+        try:
+            configisha = self.config["Settings"]["Isha"]
+            self.isha.setText(configisha)
+        except KeyError:
+            self.isha.setText("00.00")
+
+        try:
+            checked = self.config["Settings"]["NoAdhan"]
+        except:
+            checked = "False"
+
+        if(checked == "False"):
+            self.adhan.setChecked(True)
+        else:
+            self.adhan.setChecked(False)
+
+        try:
+            checkedNotif = self.config["Settings"]["NoNotification"]
+        except KeyError:
+            checkedNotif = "False"
+
+        if(checkedNotif == "False"):
+            self.notification.setChecked(True)
+        else:
+            self.notification.setChecked(False)
+
+        try:
+            vol = self.config["Settings"]["Vol"]
+        except KeyError:
+            vol = "50"
+        self.volumeAdhan.setValue(int(vol))
+
+        try: 
+            configmethod = self.config["Settings"]["Method"]
+            for i in range(len(self.methods)):
+                if (self.methods[i] == configmethod):
+                    self.methodList.setCurrentIndex(i)
+        except KeyError:
+            pass
         
     def closeEvent(self, event):
         if (self.change == True or self.state == True):
@@ -381,40 +399,6 @@ class SettingsWindow(QWidget):
             QMessageBox.Yes| QMessageBox.No, QMessageBox.No)
             if (message == QMessageBox.Yes):
                 self.chang = False                
-                self.longitude.undo()
-                self.latitude.undo()
-                self.imsak.undo()
-                self.fajr.undo()
-                self.dhuhr.undo()
-                self.asr.undo()
-                self.maghrib.undo()
-                self.isha.undo()
-                try: 
-                    configmethod = self.config["Settings"]["Method"]
-                    for i in range(len(self.methods)):
-                        if (self.methods[i] == configmethod):
-                            self.methodList.setCurrentIndex(i)
-                except KeyError:
-                    pass
-                try:
-                    checked = self.config["Settings"]["NoAdhan"]
-                except:
-                    checked = "False"
-
-                if(checked == "False"):
-                    self.adhan.setChecked(True)
-                else:
-                    self.adhan.setChecked(False)
-
-                try:
-                    checkedNotif = self.config["Settings"]["NoNotification"]
-                except KeyError:
-                    checkedNotif = "False"
-
-                if(checkedNotif == "False"):
-                    self.notification.setChecked(True)
-                else:
-                    self.notification.setChecked(False)
-
+                self.loadConfig()
             else:
                 event.ignore()
