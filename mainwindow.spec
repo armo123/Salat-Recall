@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['mainwindow.pyw'],
-             pathex=['C:\\Users\\armo\\prayertimes'],
+             pathex=['C:\\Users\\armo\\Documents\\GitHub\\Salat-Recall'],
              binaries=[],
              datas=[],
              hiddenimports=[],

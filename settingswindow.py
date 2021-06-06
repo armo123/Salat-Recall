@@ -12,7 +12,7 @@ from PyQt5.QtCore import QLine, QRegExp, QThreadPool , Qt
 from PyQt5.QtGui import QRegExpValidator, QIcon
 from configparser import ConfigParser
 from worker import Worker
-from time import sleep
+from threading import Thread
 
 
     
@@ -219,8 +219,6 @@ class SettingsWindow(QWidget):
         groupeAdhan.setLayout(layoutGroupAdhan)
     
 
-
-        
         self.saveButton = QPushButton(QIcon(":disk.png"), "Save")
         layoutSave = QHBoxLayout()
         layoutSave.addStretch()
@@ -277,25 +275,21 @@ class SettingsWindow(QWidget):
         self.volumeAdhan.valueChanged.connect(self.volumeChanged)
         self.adhan.stateChanged.connect(self.stateCh)
         self.notification.stateChanged.connect(self.stateCh)
-        self.saveButton.clicked.connect(self.saveConfig)
+        self.saveButton.clicked.connect(self.threadedSave)
 
     def changed(self):
         self.change = True
-        self.saveButton.setDisabled(False)
 
     def volumeChanged(self):
         self.labelVol.setText("Volume:" + str(self.volumeAdhan.value()))
         self.state = True
-        self.saveButton.setDisabled(False)
 
     def stateCh(self):
         self.state = True
-        self.saveButton.setDisabled(False)
 
     # Saving settings in ini file
 
     def saveConfig(self):
-        self.saveButton.setDisabled(True)
         if(len(self.latitude.text()) > 0):
             latitudeValue = self.latitude.text()
         else:
@@ -380,6 +374,10 @@ class SettingsWindow(QWidget):
         self.change = False
         self.state = False
 
+    def threadedSave(self):
+        t1 = Thread(target=self.saveConfig)
+        t1.start()
+        t1.join()
     
         
     def closeEvent(self, event):
