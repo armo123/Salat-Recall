@@ -3,15 +3,12 @@
 
 
 
-import configparser
-import sys
 from PyQt5.QtGui import QIcon, QRegExpValidator
-from PyQt5.QtWidgets import QAction, QApplication, QDialog, QGroupBox, QHBoxLayout, QMessageBox, QPushButton,\
+from PyQt5.QtWidgets import QGroupBox, QHBoxLayout, QMessageBox, QPushButton,\
      QVBoxLayout, QLabel, QLineEdit, QWidget, QComboBox, QCheckBox, QSlider
-from PyQt5.QtCore import QLine, QRegExp, QThreadPool , Qt
+from PyQt5.QtCore import QRegExp, Qt
 from PyQt5.QtGui import QRegExpValidator, QIcon
 from configparser import ConfigParser
-from worker import Worker
 from threading import Thread
 
 
@@ -26,10 +23,7 @@ class SettingsWindow(QWidget):
         self.state = False
         self.change = False
     
-   
-
         # Creating widgets 
-
         self.labelLatitude = QLabel("Latitude:")
         self.latitude = QLineEdit()
         self.latitude.setFixedWidth(50)
@@ -166,7 +160,7 @@ class SettingsWindow(QWidget):
         self.adhanLabel = QLabel("No adhan")
         self.adhan = QCheckBox()
         try:
-            checked = self.config["Settings"]["Adhan"]
+            checked = self.config["Settings"]["NoAdhan"]
         except:
             checked = "False"
 
@@ -178,7 +172,7 @@ class SettingsWindow(QWidget):
         self.notifLabel = QLabel("No notifications")
         self.notification = QCheckBox()
         try:
-            checkedNotif = self.config["Settings"]["Notification"]
+            checkedNotif = self.config["Settings"]["NoNotification"]
         except KeyError:
             checkedNotif = "False"
 
@@ -213,7 +207,6 @@ class SettingsWindow(QWidget):
         layoutGroupAdhan.addLayout(notifLayout)
         layoutGroupAdhan.addLayout(volumeLayout)
         layoutGroupAdhan.addLayout(layoutLabelVol)
-
 
         groupeAdhan = QGroupBox("Adhan:")
         groupeAdhan.setLayout(layoutGroupAdhan)
@@ -361,24 +354,24 @@ class SettingsWindow(QWidget):
                             'Maghrib':   maghribValue,
                             'Isha':      ishaValue,
                             'Method':    method,
-                            'Adhan':     noAdhan,
+                            'NoAdhan':     noAdhan,
                             'Vol':       adhanVol,
-                            'Notification': noNotif}                 
+                            'NoNotification': noNotif}                 
                         
         with open('config.ini', 'w') as configfile:
             self.config.write(configfile)
 
-        if(self.change == True):
-            QMessageBox.information(self, "Restart the App", 
-            "Please restart the Application")
         self.change = False
         self.state = False
 
     def threadedSave(self):
-        t1 = Thread(target=self.saveConfig)
-        t1.start()
+        thread = Thread(target=self.saveConfig)
+        if(self.change == True):
+            QMessageBox.information(self, "Restart the App", 
+            "Please restart the Application")
         try:
-            t1.join()
+            thread.start()
+            thread.join()
         except Exception as e:
             QMessageBox.warning(self, "Exception Warning", "Exceptin detail: " + e)
     
@@ -388,11 +381,7 @@ class SettingsWindow(QWidget):
             message =  QMessageBox.question(self, "Quit without saving", 
             "Do you want to quit without saving ?", 
             QMessageBox.Yes| QMessageBox.No, QMessageBox.No)
-            if (message == QMessageBox.No):
-                event.ignore()
-            else:
+            if (message == QMessageBox.Yes):
                 self.chang = False
-                return
-        self.change = False
-
-
+            else:
+                event.ignore()

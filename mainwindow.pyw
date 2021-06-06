@@ -7,7 +7,7 @@ from clockwidget import ClockWidget
 # import configparser
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout,\
         QHBoxLayout, QGridLayout, QWidget, QGroupBox, QSystemTrayIcon, QMenu,\
-        QAction, qApp, QCalendarWidget, QAction, QGridLayout, QGridLayout,\
+        QAction, qApp, QAction, QGridLayout, QGridLayout,\
         QMessageBox 
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, QTimer, QUrl, QTimer, QThreadPool
@@ -102,7 +102,6 @@ class MainWindow(QMainWindow):
         self.labelCurrentPrayerTime = QLabel("")
         self.labelCurrentPrayerTime.setStyleSheet("color: green; font-weight: bold")
         layoutCurrentPrayer = QHBoxLayout()
-
 
         # Layout for CurrentPrayer labels
         layoutCurentPrayer = QHBoxLayout
@@ -300,7 +299,6 @@ class MainWindow(QMainWindow):
         config = ConfigParser()
         config.read("config.ini")
 
-
         try:
             notifconfig = str(config["Settings"]["Notification"])
         except KeyError:
@@ -390,7 +388,6 @@ class MainWindow(QMainWindow):
             qApp.quit()
             sys.exit()
         event.ignore()
-        
 
 
 def main():
