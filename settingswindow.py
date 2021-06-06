@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 
-
 from PyQt5.QtGui import QIcon, QRegExpValidator
 from PyQt5.QtWidgets import QGroupBox, QHBoxLayout, QMessageBox, QPushButton,\
      QVBoxLayout, QLabel, QLineEdit, QWidget, QComboBox, QCheckBox, QSlider
@@ -224,13 +223,13 @@ class SettingsWindow(QWidget):
 
 
         self.methodList = QComboBox()
-        methods = ["MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari"]
-        self.methodList.addItems(methods)
+        self.methods = ["MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari"]
+        self.methodList.addItems(self.methods)
 
         try: 
             configmethod = self.config["Settings"]["Method"]
-            for i in range(len(methods)):
-                if (methods[i] == configmethod):
+            for i in range(len(self.methods)):
+                if (self.methods[i] == configmethod):
                     self.methodList.setCurrentIndex(i)
         except KeyError:
             pass
@@ -254,7 +253,6 @@ class SettingsWindow(QWidget):
         self.setFixedSize(220, 480)
         self.setStyleSheet("QGroupBox{font: bold;}")
         self.setWindowFlags(Qt.WindowCloseButtonHint)
-
 
         self.latitude.textChanged[str].connect(self.changed)
         self.longitude.textChanged[str].connect(self.changed)
@@ -382,6 +380,41 @@ class SettingsWindow(QWidget):
             "Do you want to quit without saving ?", 
             QMessageBox.Yes| QMessageBox.No, QMessageBox.No)
             if (message == QMessageBox.Yes):
-                self.chang = False
+                self.chang = False                
+                self.longitude.undo()
+                self.latitude.undo()
+                self.imsak.undo()
+                self.fajr.undo()
+                self.dhuhr.undo()
+                self.asr.undo()
+                self.maghrib.undo()
+                self.isha.undo()
+                try: 
+                    configmethod = self.config["Settings"]["Method"]
+                    for i in range(len(self.methods)):
+                        if (self.methods[i] == configmethod):
+                            self.methodList.setCurrentIndex(i)
+                except KeyError:
+                    pass
+                try:
+                    checked = self.config["Settings"]["NoAdhan"]
+                except:
+                    checked = "False"
+
+                if(checked == "False"):
+                    self.adhan.setChecked(True)
+                else:
+                    self.adhan.setChecked(False)
+
+                try:
+                    checkedNotif = self.config["Settings"]["NoNotification"]
+                except KeyError:
+                    checkedNotif = "False"
+
+                if(checkedNotif == "False"):
+                    self.notification.setChecked(True)
+                else:
+                    self.notification.setChecked(False)
+
             else:
                 event.ignore()

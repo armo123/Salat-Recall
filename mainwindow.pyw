@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout,\
         QAction, qApp, QAction, QGridLayout, QGridLayout,\
         QMessageBox 
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt, QTimer, QUrl, QTimer, QThreadPool
+from PyQt5.QtCore import Qt, QTimer, QUrl, QTimer, QThreadPool, qQNaN
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QSound
 from worker import Worker
 from settingswindow import SettingsWindow
@@ -27,8 +27,6 @@ class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow,self).__init__(*args, **kwargs)
         
-
-
         PT = GetPrayerTimes()
         self.times = PT.times
 
@@ -378,6 +376,7 @@ class MainWindow(QMainWindow):
         if(str(self.now()) >= ishaAdhan or str(self.now()) < fajrAdhan):
             self.labelCurrentPrayerTime.setText("Isha")
             self.labelNextPrayerTime.setText("Fajr")
+
         
 
     def closeEvent(self, event):
@@ -387,6 +386,7 @@ class MainWindow(QMainWindow):
         if(message == QMessageBox.Yes):
             qApp.quit()
             sys.exit()
+
         event.ignore()
 
 
