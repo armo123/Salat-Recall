@@ -298,7 +298,7 @@ class MainWindow(QMainWindow):
         config.read("config.ini")
 
         try:
-            notifconfig = str(config["Settings"]["Notification"])
+            notifconfig = str(config["Settings"]["NoNotification"])
         except KeyError:
             notifconfig = "True"
 
