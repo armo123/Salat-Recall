@@ -12,7 +12,7 @@ from PyQt5 import QtCore
 class AboutDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super(AboutDialog,self).__init__(*args, **kwargs)
-        labelName = QLabel("Salat Call version 1.1")
+        labelName = QLabel("Salat Call version 1.2")
         labelName.setStyleSheet("text-align: center; font: 15px ")
         appIcon = QPixmap()
         appIcon.load(":aboutIcon")
