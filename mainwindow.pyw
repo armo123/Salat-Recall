@@ -19,8 +19,11 @@ from aboutwindow import AboutDialog
 import ressources 
 from PyQt5 import QtCore
 from configparser import ConfigParser
+from threading import Thread
+# from tendo import singleton 
 
-
+# Prevent from multiple execution
+# me = singleton.SingleInstance()
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
@@ -248,10 +251,21 @@ class MainWindow(QMainWindow):
         return formatedTime
 
    
+    #def threadedLoop(self):
+    #    threadpool = QThreadPool(self)
+    #    worker = Worker(self.timeLoop)
+    #    threadpool.start(worker)
+
     def threadedLoop(self):
-        threadpool = QThreadPool(self)
-        worker = Worker(self.timeLoop)
-        threadpool.start(worker)
+        thread = Thread(target=self.timeLoop)
+        if(self.change == True):
+            QMessageBox.information(self, "Restart the App", 
+                "Please restart the Application")
+        try:
+            thread.start()
+            thread.join()
+        except Exception as e:
+            QMessageBox.warning(self, "Exception Warning", "Exceptin detail: " + e)
 
     def showTrayMessage(self, message):
 
@@ -260,7 +274,10 @@ class MainWindow(QMainWindow):
     def playAdhan(self):
         config = ConfigParser()
         config.read('config.ini')
-        adhanconfig = str(config["Settings"]["NoAdhan"])
+        try:
+            adhanconfig = str(config["Settings"]["NoAdhan"])
+        except KeyError:
+            adhanconfig = True
         try:
             if(adhanconfig == "True"):
                 url = QUrl.fromLocalFile("adhan.wav")
