@@ -12,15 +12,15 @@ from threading import Thread
 
 
     
-
+state = False
+change = False
 class SettingsWindow(QWidget):
     def __init__(self, *args, **kwargs):
         super(SettingsWindow, self).__init__(*args, **kwargs)
         # Reding config file to file the text filds
         self.config = ConfigParser()
         self.config.read("config.ini")
-        self.state = False
-        self.change = False
+        
     
         # Creating widgets 
         self.labelLatitude = QLabel("Latitude:")
@@ -204,14 +204,17 @@ class SettingsWindow(QWidget):
         self.saveButton.clicked.connect(self.threadedSave)
 
     def changed(self):
-        self.change = True
+        global change
+        change = True
 
     def volumeChanged(self):
         self.labelVol.setText("Volume:" + str(self.volumeAdhan.value()))
+        global state
         self.state = True
 
     def stateCh(self):
-        self.state = True
+        global state
+        state = True
 
     # Saving settings in ini file
 
@@ -294,12 +297,15 @@ class SettingsWindow(QWidget):
         with open('config.ini', 'w') as configfile:
             self.config.write(configfile)
 
-        self.change = False
-        self.state = False
+        global change
+        global state
+        change = False
+        state = False
 
     def threadedSave(self):
         thread = Thread(target=self.saveConfig)
-        if(self.change == True):
+        global change
+        if(change == True):
             QMessageBox.information(self, "Restart the App", 
             "Please restart the Application")
         try:
@@ -393,12 +399,14 @@ class SettingsWindow(QWidget):
             pass
         
     def closeEvent(self, event):
-        if (self.change == True or self.state == True):
+        global state
+        global change
+        if (change == True or state == True):
             message =  QMessageBox.question(self, "Quit without saving", 
             "Do you want to quit without saving ?", 
             QMessageBox.Yes| QMessageBox.No, QMessageBox.No)
             if (message == QMessageBox.Yes):
-                self.chang = False                
+                change = False                
                 self.loadConfig()
             else:
                 event.ignore()
